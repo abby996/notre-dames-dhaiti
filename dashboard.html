@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNDH — Portail Étudiant</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+  .fade-in{animation:fade .25s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .tab-btn{padding:.6rem 1.1rem;border-radius:.5rem .5rem 0 0;font-weight:600;font-size:.8rem;background:#fff;color:#1e3a8a;border:1px solid #e5e7eb;border-bottom:none;transition:all .2s}
+  .tab-btn:hover{background:#eff6ff}
+  .tab-btn.active{background:#1e40af;color:#fff;box-shadow:0 4px 12px -2px rgba(30,64,175,.5)}
+  .tab-btn.active i{color:#fb923c}
+  .pulse-dot{animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
+
+<div id="student-app" class="min-h-screen flex flex-col">
+
+  <!-- ============ HEADER ============ -->
+  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-30">
+    <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png" alt="UNDH"
+             class="h-11 w-auto object-contain bg-white/10 rounded p-1"
+             onerror="this.onerror=null;this.src='https://via.placeholder.com/60x40/1e3a8a/ffffff?text=U';">
+        <div class="min-w-0 leading-tight">
+          <p class="text-[10px] uppercase tracking-widest text-blue-200">Portail Étudiant</p>
+          <p class="font-bold text-sm truncate">Université Notre-Dame d'Haïti</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:block text-right">
+          <p id="stu-header-name" class="text-sm font-semibold">—</p>
+          <p id="stu-header-code" class="text-[10px] text-blue-200">—</p>
+        </div>
+        <button onclick="refreshData()" class="bg-blue-700 hover:bg-blue-600 text-xs px-3 py-1.5 rounded font-semibold transition" title="Actualiser">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1.5 rounded font-semibold transition">
+          <i class="fa-solid fa-power-off mr-1"></i> Déconnexion
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <main class="flex-1 container mx-auto px-4 md:px-6 py-6">
+
+    <!-- BANNER ÉTUDIANT -->
+    <div id="student-banner" class="bg-gradient-to-r from-blue-900 via-blue-800 to-orange-700 text-white rounded-2xl shadow-lg p-6 mb-6 flex items-center gap-5">
+      <div id="stu-avatar" class="w-20 h-20 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-2xl font-bold shrink-0"></div>
+      <div class="min-w-0 flex-1">
+        <h2 id="stu-fullname" class="text-xl md:text-2xl font-bold truncate">—</h2>
+        <div class="flex flex-wrap gap-2 mt-2 text-xs">
+          <span id="stu-class-info" class="bg-white/15 px-3 py-1 rounded-full backdrop-blur">
+            <i class="fa-solid fa-school mr-1"></i>—
+          </span>
+          <span id="stu-filiere-info" class="bg-white/15 px-3 py-1 rounded-full backdrop-blur">
+            <i class="fa-solid fa-graduation-cap mr-1"></i>—
+          </span>
+          <span id="stu-code-info" class="bg-white/15 px-3 py-1 rounded-full backdrop-blur">
+            <i class="fa-solid fa-id-card mr-1"></i>—
+          </span>
+        </div>
+        <p id="stu-email-info" class="text-xs text-blue-100 mt-2"><i class="fa-solid fa-envelope mr-1"></i>—</p>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="flex flex-wrap gap-1 border-b border-gray-300 mb-6">
+      <button data-tab="stu-tab-profile" onclick="switchStudentTab('stu-tab-profile')" class="tab-btn">
+        <i class="fa-solid fa-user mr-1"></i> Mon profil
+      </button>
+      <button data-tab="stu-tab-notes" onclick="switchStudentTab('stu-tab-notes')" class="tab-btn">
+        <i class="fa-solid fa-file-lines mr-1"></i> Mes notes
+      </button>
+      <button data-tab="stu-tab-eco" onclick="switchStudentTab('stu-tab-eco')" class="tab-btn">
+        <i class="fa-solid fa-coins mr-1"></i> Mon économat
+      </button>
+    </div>
+
+    <!-- ============ TAB 1: PROFILE ============ -->
+    <section id="stu-tab-profile" class="tab-content bg-white p-6 rounded-xl shadow-sm">
+      <h3 class="text-lg font-bold text-blue-900 border-b pb-2 mb-4">
+        <i class="fa-solid fa-id-card mr-2"></i>Informations personnelles
+      </h3>
+      <div id="stu-profile-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm"></div>
+
+      <!-- Quick stats -->
+      <div id="stu-profile-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6"></div>
+    </section>
+
+    <!-- ============ TAB 2: NOTES ============ -->
+    <section id="stu-tab-notes" class="tab-content hidden bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-3 mb-5">
+        <div>
+          <h3 class="text-lg font-bold text-blue-900">
+            <i class="fa-solid fa-file-lines mr-2"></i>Mes résultats académiques
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">
+            Modil yo selon filière w: <strong id="notes-filiere-label" class="text-blue-800"></strong>
+          </p>
+        </div>
+        <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-1.5 rounded transition">
+          <i class="fa-solid fa-print mr-1"></i> Enprime
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div id="stu-notes-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"></div>
+
+      <!-- Info légende -->
+      <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex flex-wrap gap-4">
+        <span><i class="fa-solid fa-circle text-red-500 mr-1"></i> Note < seuil = <strong>ÉCHEC</strong></span>
+        <span><i class="fa-solid fa-circle text-green-600 mr-1"></i> Note ≥ seuil = <strong>SUCCÈS</strong></span>
+        <span><i class="fa-solid fa-circle text-gray-400 mr-1"></i> — = Non évalué</span>
+      </div>
+
+      <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-100 text-gray-700 text-xs uppercase">
+            <tr>
+              <th class="p-3 text-left">Code</th>
+              <th class="p-3 text-left">Module</th>
+              <th class="p-3 text-center">Type</th>
+              <th class="p-3 text-center">Durée</th>
+              <th class="p-3 text-center">Seuil</th>
+              <th class="p-3 text-center">Note / 100</th>
+              <th class="p-3 text-center">Verdict</th>
+              <th class="p-3 text-center">Statut</th>
+            </tr>
+          </thead>
+          <tbody id="stu-notes-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ TAB 3: ÉCONOMAT ============ -->
+    <section id="stu-tab-eco" class="tab-content hidden bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-3 mb-5">
+        <h3 class="text-lg font-bold text-blue-900">
+          <i class="fa-solid fa-coins mr-2"></i>Ma situation économat
+        </h3>
+        <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-1.5 rounded transition">
+          <i class="fa-solid fa-print mr-1"></i> Enprime
+        </button>
+      </div>
+
+      <div id="stu-eco-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5"></div>
+
+      <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-100 text-gray-700 text-xs uppercase">
+            <tr>
+              <th class="p-3 text-left">Description</th>
+              <th class="p-3 text-right">Montant dû</th>
+              <th class="p-3 text-right">Montant payé</th>
+              <th class="p-3 text-right">Solde</th>
+              <th class="p-3 text-center">Statut</th>
+            </tr>
+          </thead>
+          <tbody id="stu-eco-table"></tbody>
+        </table>
+      </div>
+
+      <div id="eco-progress" class="mt-5"></div>
+    </section>
+
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 text-xs text-center py-4 px-6">
+    © <span id="year"></span> Université Notre-Dame d'Haïti — Portail Étudiant
+  </footer>
+</div>
+
+<script>
+/* =================================================================
+   UNDH — dashboard.html (Portail Étudiant)
+================================================================= */
+const STORAGE_KEY = 'undh_portal_db_v2';
+const SESSION_KEY = 'undh_portal_session_v2';
+
+let DB = { classes: [], modules: [], students: [], notes: [], economat: [] };
+let currentStudentId = null;
+
+/* ---------- Helpers ---------- */
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { const n = Number(v); return isNaN(n) ? 0 : n; };
+const fmtMoney = v => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(num(v)) + ' HTG';
+
+/* ---------- AUTH CHECK ---------- */
+function checkAuth() {
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) return null;
+  try {
+    const s = JSON.parse(raw);
+    if (s.role !== 'student') return null;
+    return s.id;
+  } catch(_) { return null; }
+}
+currentStudentId = checkAuth();
+if (!currentStudentId) { window.location.href = 'index.html'; }
+
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  window.location.href = 'index.html';
+}
+
+/* ---------- DB ---------- */
+function loadDB() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { window.location.href = 'index.html'; return; }
+  try { DB = JSON.parse(raw); } catch(_) { window.location.href = 'index.html'; }
+}
+loadDB();
+
+/* ---------- Refresh ---------- */
+function refreshData() {
+  loadDB();
+  render();
+  // Small visual feedback
+  const btn = event?.target?.closest('button');
+  if (btn) {
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.classList.add('fa-spin');
+      setTimeout(() => icon.classList.remove('fa-spin'), 600);
+    }
+  }
+}
+
+/* ---------- Tabs ---------- */
+function switchStudentTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  const t = document.getElementById(tabId);
+  if (t) { t.classList.remove('hidden'); t.classList.add('fade-in'); }
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+}
+
+/* ---------- Render ---------- */
+function render() {
+  const s = DB.students.find(x => x.id === currentStudentId);
+  if (!s) { logout(); return; }
+  const cls = DB.classes.find(c => c.id === s.classId);
+  const ini = (s.prenom?.[0]||'?').toUpperCase() + (s.nom?.[0]||'').toUpperCase();
+
+  /* Header */
+  document.getElementById('stu-header-name').textContent = `${s.prenom} ${s.nom}`;
+  document.getElementById('stu-header-code').textContent = s.student_id;
+  document.getElementById('stu-avatar').textContent = ini;
+  document.getElementById('stu-fullname').textContent = `${s.prenom} ${s.nom}`;
+
+  /* Banner badges */
+  document.getElementById('stu-class-info').innerHTML = `<i class="fa-solid fa-school mr-1"></i>${esc(cls?.nom || '—')}`;
+  document.getElementById('stu-code-info').innerHTML = `<i class="fa-solid fa-id-card mr-1"></i>${esc(s.student_id)}`;
+  document.getElementById('stu-email-info').innerHTML = `<i class="fa-solid fa-envelope mr-1"></i>${esc(s.email || '—')}`;
+
+  /* Filière badge avec koulè */
+  const filInfo = document.getElementById('stu-filiere-info');
+  if (s.filiere === 'Médecine Générale') {
+    filInfo.innerHTML = `<i class="fa-solid fa-user-doctor mr-1"></i>Médecine Générale`;
+    filInfo.className = 'bg-blue-500/30 border border-blue-300/40 px-3 py-1 rounded-full backdrop-blur font-semibold';
+  } else {
+    filInfo.innerHTML = `<i class="fa-solid fa-pills mr-1"></i>Pharmacie`;
+    filInfo.className = 'bg-purple-500/30 border border-purple-300/40 px-3 py-1 rounded-full backdrop-blur font-semibold';
+  }
+
+  renderStudentProfile(s, cls);
+  renderStudentNotes(s, cls);
+  renderStudentEco(s);
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+}
+
+/* =================================================================
+   TAB 1 — PROFILE
+================================================================= */
+function renderStudentProfile(s, cls) {
+  const fields = [
+    ['Code étudiant', s.student_id],
+    ['Nom complet', `${s.prenom} ${s.nom}`],
+    ['Filière / Groupe', s.filiere],
+    ['Classe / Année', cls?.nom],
+    ['Section', s.section],
+    ['Nom d\'utilisateur', s.username],
+    ['Email', s.email],
+    ['Téléphone', s.telephone],
+    ['Adresse', s.adresse]
+  ];
+
+  document.getElementById('stu-profile-grid').innerHTML = fields.map(([l, v]) => `
+    <div class="border border-gray-100 rounded-lg p-3 bg-gray-50">
+      <p class="text-[11px] uppercase tracking-wide text-gray-500 mb-1">${esc(l)}</p>
+      <p class="font-semibold text-gray-800 break-words">${esc(v) || '—'}</p>
+    </div>`).join('');
+
+  /* Quick stats */
+  const modules = DB.modules.filter(m => m.classId === s.classId && m.groupes.includes(s.filiere));
+  const notes = modules.map(m => {
+    const n = DB.notes.find(x => x.studentId === s.id && x.moduleId === m.id);
+    return { m, note: n && n.note_sur_100 !== null && n.note_sur_100 !== undefined ? num(n.note_sur_100) : null };
+  });
+  const evaluated = notes.filter(x => x.note !== null);
+  const passed = evaluated.filter(x => x.note >= x.m.seuil).length;
+  const failed = evaluated.length - passed;
+  const avg = evaluated.length ? evaluated.reduce((a, x) => a + x.note, 0) / evaluated.length : 0;
+
+  const card = (l, v, c) => `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 ${c}">
+      <p class="text-xs text-gray-500 uppercase font-semibold">${l}</p>
+      <p class="text-2xl font-bold text-blue-900 mt-1">${v}</p>
+    </div>`;
+
+  document.getElementById('stu-profile-stats').innerHTML =
+    card('Modules', modules.length, 'border-blue-700') +
+    card('Réussis', passed, 'border-green-600') +
+    card('Échoués', failed, 'border-red-600') +
+    card('Moyenne', avg.toFixed(2), 'border-orange-500');
+}
+
+/* =================================================================
+   TAB 2 — NOTES
+================================================================= */
+function renderStudentNotes(s, cls) {
+  /* Label filière */
+  document.getElementById('notes-filiere-label').textContent = s.filiere;
+
+  /* Modil selon filière etidyan an + klas li */
+  const modules = DB.modules
+    .filter(m => m.classId === s.classId && m.groupes.includes(s.filiere))
+    .sort((a, b) => a.code.localeCompare(b.code));
+
+  const data = modules.map(m => {
+    const n = DB.notes.find(x => x.studentId === s.id && x.moduleId === m.id);
+    const note = n && n.note_sur_100 !== null && n.note_sur_100 !== undefined ? num(n.note_sur_100) : null;
+    const statut = n?.statut || (note === null ? 'Non évalué' : 'Évalué');
+    return { m, note, statut };
+  });
+
+  const tbody = document.getElementById('stu-notes-table');
+
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-500">
+      <i class="fa-solid fa-file-circle-xmark text-3xl mb-2 block text-gray-300"></i>
+      Aucun module pour votre filière dans cette classe.</td></tr>`;
+  } else {
+    tbody.innerHTML = data.map(({ m, note, statut }) => {
+      const failed = note !== null && note < m.seuil;
+      const passed = note !== null && note >= m.seuil;
+
+      /* Note — wouj si < seuil, vèt si ≥ seuil */
+      const noteHtml = note === null
+        ? `<span class="text-gray-400 italic text-sm">—</span>`
+        : failed
+          ? `<span class="text-2xl font-bold text-red-600">${note}</span>`
+          : `<span class="text-2xl font-bold text-green-700">${note}</span>`;
+
+      /* Verdict */
+      const verdict = note === null
+        ? `<span class="bg-gray-100 text-gray-600 text-[10px] px-3 py-1.5 rounded-full font-bold">—</span>`
+        : failed
+          ? `<span class="bg-red-100 text-red-800 text-[10px] px-3 py-1.5 rounded-full font-bold">ÉCHEC</span>`
+          : `<span class="bg-green-100 text-green-800 text-[10px] px-3 py-1.5 rounded-full font-bold">SUCCÈS</span>`;
+
+      /* Statut */
+      const statutCls = note === null
+        ? 'bg-gray-100 text-gray-600'
+        : 'bg-blue-100 text-blue-800';
+      const statutHtml = `<span class="${statutCls} text-[10px] px-2 py-1 rounded font-bold">${esc(statut)}</span>`;
+
+      /* Type de module */
+      const isCommon = m.groupes.length === 2;
+      const typeHtml = isCommon
+        ? `<span class="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-semibold">🎓+💊 Commun</span>`
+        : m.groupes[0] === 'Médecine Générale'
+          ? `<span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">🎓 Médecine</span>`
+          : `<span class="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 font-semibold">💊 Pharmacie</span>`;
+
+      return `
+        <tr class="border-b border-gray-100 ${failed ? 'bg-red-50/60' : 'hover:bg-gray-50'}">
+          <td class="p-3 font-mono font-semibold text-blue-800 text-xs">${esc(m.code)}</td>
+          <td class="p-3">
+            <p class="font-medium">${esc(m.nom)}</p>
+            <div class="mt-1">${typeHtml}</div>
+          </td>
+          <td class="p-3 text-center">${typeHtml}</td>
+          <td class="p-3 text-center text-gray-600 text-xs font-semibold">${m.duree} h</td>
+          <td class="p-3 text-center">
+            <span class="text-red-700 font-bold text-sm">${m.seuil}%</span>
+          </td>
+          <td class="p-3 text-center">${noteHtml}</td>
+          <td class="p-3 text-center">${verdict}</td>
+          <td class="p-3 text-center">${statutHtml}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  /* Stats */
+  const evaluated = data.filter(x => x.note !== null);
+  const passed = evaluated.filter(x => x.note >= x.m.seuil).length;
+  const failed = evaluated.length - passed;
+  const notEval = data.length - evaluated.length;
+  const avg = evaluated.length ? evaluated.reduce((a, x) => a + x.note, 0) / evaluated.length : 0;
+
+  const card = (l, v, c) => `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 ${c}">
+      <p class="text-xs text-gray-500 uppercase font-semibold">${l}</p>
+      <p class="text-2xl font-bold text-blue-900 mt-1">${v}</p>
+    </div>`;
+
+  document.getElementById('stu-notes-stats').innerHTML =
+    card('Modules', data.length, 'border-blue-700') +
+    card('Réussis', passed, 'border-green-600') +
+    card('Échoués', failed, 'border-red-600') +
+    card('Moyenne', avg.toFixed(2), 'border-orange-500');
+}
+
+/* =================================================================
+   TAB 3 — ÉCONOMAT
+================================================================= */
+function renderStudentEco(s) {
+  const list = DB.economat.filter(e => e.studentId === s.id);
+  const tbody = document.getElementById('stu-eco-table');
+
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500">
+      <i class="fa-solid fa-file-invoice text-3xl mb-2 block text-gray-300"></i>
+      Aucun frais enregistré.</td></tr>`;
+  } else {
+    tbody.innerHTML = list.map(e => {
+      const due = num(e.montant_due), paye = num(e.montant_paye), solde = due - paye;
+      let cls2 = 'bg-red-100 text-red-700';
+      if (solde <= 0) cls2 = 'bg-green-100 text-green-700';
+      else if (paye > 0) cls2 = 'bg-amber-100 text-amber-700';
+      return `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+          <td class="p-3">${esc(e.description)}</td>
+          <td class="p-3 text-right">${fmtMoney(due)}</td>
+          <td class="p-3 text-right">${fmtMoney(paye)}</td>
+          <td class="p-3 text-right font-semibold ${solde > 0 ? 'text-red-600' : 'text-green-700'}">${fmtMoney(solde)}</td>
+          <td class="p-3 text-center"><span class="${cls2} text-xs px-2 py-1 rounded font-semibold">${esc(e.statut)}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  const td = list.reduce((a,e) => a + num(e.montant_due), 0);
+  const tp = list.reduce((a,e) => a + num(e.montant_paye), 0);
+  const reste = td - tp;
+  const pct = td > 0 ? Math.round(tp / td * 100) : 0;
+
+  const card = (l, v, c) => `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 ${c}">
+      <p class="text-xs text-gray-500 uppercase font-semibold">${l}</p>
+      <p class="text-xl font-bold text-blue-900 mt-1">${fmtMoney(v)}</p>
+    </div>`;
+
+  document.getElementById('stu-eco-stats').innerHTML =
+    card('Total dû', td, 'border-blue-700') +
+    card('Total payé', tp, 'border-green-600') +
+    card('Solde restant', reste, reste > 0 ? 'border-red-600' : 'border-green-600');
+
+  /* Progress bar */
+  const progBarCls = pct >= 100 ? 'bg-green-500' : pct >= 50 ? 'bg-amber-500' : 'bg-red-500';
+  document.getElementById('eco-progress').innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm p-5">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-sm font-semibold text-gray-700"><i class="fa-solid fa-chart-line mr-1 text-blue-700"></i>Progression du paiement</p>
+        <span class="text-lg font-bold ${pct >= 100 ? 'text-green-700' : pct >= 50 ? 'text-amber-600' : 'text-red-600'}">${pct}%</span>
+      </div>
+      <div class="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
+        <div class="${progBarCls} h-4 rounded-full transition-all duration-700 flex items-center justify-end pr-2" style="width:${pct}%">
+          ${pct >= 15 ? `<span class="text-[10px] text-white font-bold">${pct}%</span>` : ''}
+        </div>
+      </div>
+      ${reste <= 0
+        ? `<p class="text-xs text-green-700 mt-2 font-semibold"><i class="fa-solid fa-check-circle mr-1"></i>Ou byen! Ou fin peye tout frè w.</p>`
+        : `<p class="text-xs text-gray-500 mt-2">Reste à payer: <strong class="text-red-600">${fmtMoney(reste)}</strong></p>`}
+    </div>`;
+}
+
+/* =================================================================
+   AUTO-REFRESH (si admin chanje done nan yon lòt onglet)
+================================================================= */
+window.addEventListener('storage', (e) => {
+  if (e.key === STORAGE_KEY) {
+    loadDB();
+    render();
+  }
+});
+
+/* =================================================================
+   BOOT
+================================================================= */
+render();
+switchStudentTab('stu-tab-profile');
+</script>
+</body>
+</html>

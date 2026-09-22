@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNDH — Université Notre-Dame d'Haïti</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+  .fade-in{animation:fade .3s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  .hero-overlay{background:linear-gradient(115deg,rgba(30,58,138,.92) 0%,rgba(30,58,138,.75) 45%,rgba(15,23,42,.65) 100%)}
+</style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+<!-- ============ TOP BAR ============ -->
+<div class="bg-gray-900 text-gray-300 text-xs py-2 px-4 md:px-6 flex justify-between items-center">
+  <div class="flex flex-wrap gap-x-4 gap-y-1">
+    <span><i class="fa-solid fa-envelope mr-1 text-blue-400"></i> info@undh.edu.ht</span>
+    <span class="hidden sm:inline"><i class="fa-solid fa-phone mr-1 text-blue-400"></i> (509) 28 13 03 00</span>
+    <span class="hidden md:inline"><i class="fa-solid fa-location-dot mr-1 text-blue-400"></i> Port-au-Prince, Haïti</span>
+  </div>
+  <div class="flex space-x-3">
+    <a href="#" class="hover:text-white"><i class="fa-brands fa-facebook"></i></a>
+    <a href="#" class="hover:text-white"><i class="fa-brands fa-twitter"></i></a>
+    <a href="#" class="hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+    <a href="#" class="hover:text-white"><i class="fa-brands fa-youtube"></i></a>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="bg-white shadow sticky top-0 z-40">
+  <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center gap-3">
+    <a href="#" class="flex items-center gap-3 shrink-0">
+      <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png"
+           alt="UNDH" class="h-14 w-auto object-contain"
+           onerror="this.onerror=null;this.src='https://via.placeholder.com/120x60/1e3a8a/ffffff?text=UNDH';">
+      <div class="hidden sm:block leading-tight border-l border-gray-200 pl-3">
+        <p class="font-bold text-blue-900 text-sm md:text-base">Université Notre-Dame d'Haïti</p>
+        <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest">Faculté des Sciences Médicales</p>
+      </div>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-5 text-xs font-bold uppercase tracking-wide text-gray-700">
+      <a href="#accueil" class="text-blue-900 hover:text-blue-700">Accueil</a>
+      <a href="#filieres" class="hover:text-blue-900">Filières</a>
+      <a href="#apropos" class="hover:text-blue-900">À propos</a>
+      <button onclick="openLogin()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded transition shadow">
+        <i class="fa-solid fa-right-to-bracket mr-1"></i> Se connecter
+      </button>
+    </nav>
+
+    <button onclick="toggleMobileMenu()" class="lg:hidden text-gray-700 text-2xl" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- Menu Mobile -->
+  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200 px-6 py-4 space-y-3 text-sm font-semibold uppercase text-gray-700">
+    <a href="#accueil" class="block py-1 hover:text-blue-900">Accueil</a>
+    <a href="#filieres" class="block py-1 hover:text-blue-900">Filières</a>
+    <a href="#apropos" class="block py-1 hover:text-blue-900">À propos</a>
+    <button onclick="openLogin()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded transition">
+      <i class="fa-solid fa-right-to-bracket mr-1"></i> Se connecter
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="accueil" class="relative text-white overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1920&q=80"
+       alt="Étudiants en médecine" class="absolute inset-0 w-full h-full object-cover">
+  <div class="absolute inset-0 hero-overlay"></div>
+
+  <div class="relative container mx-auto px-6 py-24 md:py-32 text-center max-w-3xl">
+    <span class="inline-block bg-white/10 border border-white/20 text-blue-100 text-xs px-3 py-1 rounded-full mb-5 tracking-widest uppercase backdrop-blur">
+      <i class="fa-solid fa-heart-pulse mr-1"></i> Faculté des Sciences Médicales
+    </span>
+    <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">
+      Former les professionnels de santé <span class="text-orange-400">de demain</span> pour Haïti
+    </h1>
+    <p class="text-sm md:text-base text-blue-100 mb-9 max-w-2xl mx-auto leading-relaxed">
+      L'Université Notre-Dame d'Haïti offre deux filières d'excellence :
+      <strong class="text-white">Médecine Générale</strong> et <strong class="text-white">Pharmacie</strong>.
+      Accédez à votre espace personnel pour consulter vos notes et votre situation économat.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <button onclick="openLogin()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-3 rounded text-sm uppercase transition shadow-lg">
+        <i class="fa-solid fa-right-to-bracket mr-2"></i> Portail Étudiant
+      </button>
+      <a href="#filieres" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-6 py-3 rounded text-sm uppercase transition backdrop-blur">
+        Nos 2 filières
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FILIÈRES ============ -->
+<section id="filieres" class="py-16 md:py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-orange-600 font-bold text-xs uppercase tracking-widest">Nos 2 filières</span>
+      <h2 class="text-2xl md:text-4xl font-bold text-blue-900 mt-2 mb-3">Formations d'excellence</h2>
+      <p class="text-gray-600 text-sm md:text-base">
+        Chaque promotion accueille 2 groupes d'étudiants : Médecine Générale et Pharmacie.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+      <!-- MÉDECINE -->
+      <div class="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-2xl p-8 hover:shadow-xl transition">
+        <div class="w-16 h-16 rounded-xl bg-blue-900 text-white flex items-center justify-center text-2xl mb-5">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <span class="inline-block text-[10px] font-bold uppercase tracking-widest text-blue-700 bg-blue-100 px-2 py-1 rounded mb-3">Filière 1</span>
+        <h3 class="text-2xl font-bold text-blue-900 mb-3">Médecine Générale</h3>
+        <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+          Formation complète de 5 ans pour devenir médecin généraliste. Anatomie, physiologie,
+          pathologie, cardiologie, sémiologie clinique et stage clinique.
+        </p>
+        <ul class="space-y-2 text-sm mb-6">
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-700"></i> 5 années d'études</li>
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-700"></i> Stage clinique en 5ème année</li>
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-700"></i> Diplôme d'État reconnu</li>
+        </ul>
+        <button onclick="openLogin()" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg text-sm transition">
+          <i class="fa-solid fa-right-to-bracket mr-2"></i> Accéder au portail
+        </button>
+      </div>
+
+      <!-- PHARMACIE -->
+      <div class="bg-gradient-to-br from-purple-50 to-white border-2 border-purple-200 rounded-2xl p-8 hover:shadow-xl transition">
+        <div class="w-16 h-16 rounded-xl bg-purple-700 text-white flex items-center justify-center text-2xl mb-5">
+          <i class="fa-solid fa-pills"></i>
+        </div>
+        <span class="inline-block text-[10px] font-bold uppercase tracking-widest text-purple-700 bg-purple-100 px-2 py-1 rounded mb-3">Filière 2</span>
+        <h3 class="text-2xl font-bold text-purple-900 mb-3">Pharmacie</h3>
+        <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+          Formation complète de 5 ans pour devenir pharmacien. Chimie pharmaceutique, galénique,
+          toxicologie, pharmacologie et pharmacie clinique + stage.
+        </p>
+        <ul class="space-y-2 text-sm mb-6">
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-700"></i> 5 années d'études</li>
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-700"></i> Stage pharmaceutique en 5ème année</li>
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-700"></i> Diplôme d'État reconnu</li>
+        </ul>
+        <button onclick="openLogin()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-lg text-sm transition">
+          <i class="fa-solid fa-right-to-bracket mr-2"></i> Accéder au portail
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ À PROPOS ============ -->
+<section id="apropos" class="py-16 md:py-20 bg-gray-50">
+  <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+    <div class="grid grid-cols-2 gap-4">
+      <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=800&q=80"
+           alt="Étudiants en médecine" class="rounded-xl shadow-lg object-cover h-64 w-full">
+      <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=800&q=80"
+           alt="Étudiants en pharmacie" class="rounded-xl shadow-lg object-cover h-64 w-full mt-8">
+    </div>
+    <div>
+      <span class="text-orange-600 font-bold text-xs uppercase tracking-widest">À propos de l'UNDH</span>
+      <h2 class="text-2xl md:text-4xl font-bold text-blue-900 mt-2 mb-4 leading-tight">
+        Une institution dédiée à la santé
+      </h2>
+      <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-4">
+        L'Université Notre-Dame d'Haïti forme depuis plus de deux décennies des professionnels
+        de la santé compétents et engagés au service de la communauté haïtienne.
+      </p>
+      <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
+        Nos deux filières — Médecine Générale et Pharmacie — combinent enseignement rigoureux,
+        stages cliniques dans des hôpitaux partenaires et recherche appliquée.
+      </p>
+      <ul class="space-y-3 text-sm">
+        <li class="flex items-start gap-3">
+          <span class="w-8 h-8 shrink-0 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center"><i class="fa-solid fa-check"></i></span>
+          <span><strong class="text-blue-900">Formation clinique</strong> — immersion hospitalière</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-8 h-8 shrink-0 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center"><i class="fa-solid fa-check"></i></span>
+          <span><strong class="text-blue-900">Corps professoral qualifié</strong> — médecins et pharmaciens praticiens</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-8 h-8 shrink-0 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center"><i class="fa-solid fa-check"></i></span>
+          <span><strong class="text-blue-900">Programmes accrédités</strong> — reconnus par le Ministère de la Santé</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-gray-900 text-gray-400 text-sm pt-12 pb-6 px-6">
+  <div class="container mx-auto grid md:grid-cols-4 gap-8 mb-8">
+    <div>
+      <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png" alt="UNDH"
+           class="h-12 brightness-0 invert mb-3" onerror="this.style.display='none'">
+      <p class="text-xs leading-relaxed">
+        Université Notre-Dame d'Haïti — Institution dédiée à la formation des professionnels de santé.
+      </p>
+    </div>
+    <div>
+      <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-4">Navigation</h4>
+      <ul class="space-y-2 text-xs">
+        <li><a href="#accueil" class="hover:text-white">Accueil</a></li>
+        <li><a href="#filieres" class="hover:text-white">Filières</a></li>
+        <li><a href="#apropos" class="hover:text-white">À propos</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-4">Nos 2 filières</h4>
+      <ul class="space-y-2 text-xs">
+        <li><i class="fa-solid fa-user-doctor text-blue-400 mr-2"></i>Médecine Générale</li>
+        <li><i class="fa-solid fa-pills text-purple-400 mr-2"></i>Pharmacie</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-4">Contact</h4>
+      <ul class="space-y-2 text-xs">
+        <li><i class="fa-solid fa-location-dot mr-2 text-blue-400"></i> Port-au-Prince, Haïti</li>
+        <li><i class="fa-solid fa-phone mr-2 text-blue-400"></i> (509) 28 13 03 00</li>
+        <li><i class="fa-solid fa-envelope mr-2 text-blue-400"></i> info@undh.edu.ht</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-gray-800 pt-5 text-center text-xs text-gray-500">
+    © <span id="year"></span> Université Notre-Dame d'Haïti. Tous droits réservés.
+  </div>
+</footer>
+
+<!-- ============ MODAL LOGIN ETIDYAN ============ -->
+<div id="login-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative fade-in">
+
+    <button onclick="closeLogin()" class="absolute top-4 right-4 w-9 h-9 rounded-full hover:bg-gray-100 text-gray-500 flex items-center justify-center transition" aria-label="Fermer">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+
+    <div class="text-center mb-6">
+      <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png" alt="UNDH"
+           class="h-16 mx-auto mb-3 object-contain"
+           onerror="this.onerror=null;this.src='https://via.placeholder.com/120x60/1e3a8a/ffffff?text=UNDH';">
+      <h3 class="text-xl font-bold text-blue-900">Portail Étudiant</h3>
+      <p class="text-xs text-gray-500 mt-1">Connectez-vous avec vos identifiants académiques</p>
+    </div>
+
+    <div id="err-student" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 text-xs p-3 rounded mb-4"></div>
+
+    <form onsubmit="studentLogin(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nom d'utilisateur</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <i class="fa-solid fa-user text-xs"></i>
+          </span>
+          <input id="stu-user" required autocomplete="username" placeholder="Ex: jean.baptiste"
+                 class="w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-600 focus:ring-2 focus:ring-orange-100 transition">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mot de passe</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <i class="fa-solid fa-lock text-xs"></i>
+          </span>
+          <input id="stu-pass" type="password" required autocomplete="current-password" placeholder="••••••••"
+                 class="w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-600 focus:ring-2 focus:ring-orange-100 transition">
+          <button type="button" onclick="togglePwd('stu-pass', this)" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-700">
+            <i class="fa-solid fa-eye text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <button class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+        <i class="fa-solid fa-right-to-bracket mr-2"></i> Se connecter
+      </button>
+    </form>
+
+    <div class="mt-5 p-3 bg-blue-50 rounded-lg border border-blue-100 text-[11px] text-blue-800">
+      <p class="font-bold mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Compte de démonstration</p>
+      <p>Utilisateur: <code class="bg-white px-1 rounded">jean.baptiste</code> — Mot de passe: <code class="bg-white px-1 rounded">undh2026</code></p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =================================================================
+   UNDH — index.html (Landing + Login Modal)
+   Shared storage with admin.html & dashboard.html
+================================================================= */
+const STORAGE_KEY = 'undh_portal_db_v2';
+const SESSION_KEY = 'undh_portal_session_v2';
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Helpers ---------- */
+const uid = () => 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* =================================================================
+   SEED — 5 klas · 2 filière · 20 etidyan
+================================================================= */
+function seedDB() {
+  const DB = { classes: [], modules: [], students: [], notes: [], economat: [] };
+
+  /* ===== 5 KLAS ===== */
+  const c1 = { id: uid(), code:'ANNEE-1', nom:'1ère Année', annee:1 };
+  const c2 = { id: uid(), code:'ANNEE-2', nom:'2ème Année', annee:2 };
+  const c3 = { id: uid(), code:'ANNEE-3', nom:'3ème Année', annee:3 };
+  const c4 = { id: uid(), code:'ANNEE-4', nom:'4ème Année', annee:4 };
+  const c5 = { id: uid(), code:'ANNEE-5', nom:'5ème Année', annee:5 };
+  DB.classes = [c1, c2, c3, c4, c5];
+
+  /* ===== MODIL — 2 filière sèlman ===== */
+  const MED = 'Médecine Générale';
+  const PHA = 'Pharmacie';
+  const BOTH = [MED, PHA];
+
+  const mkMod = (classId, code, nom, duree, seuil, groupes) =>
+    ({ id: uid(), classId, code, nom, duree, seuil, groupes });
+
+  DB.modules = [
+    /* 1ère Année */
+    mkMod(c1.id,'MED-101','Anatomie générale',        60,60, BOTH),
+    mkMod(c1.id,'MED-102','Biochimie générale',       45,60, BOTH),
+    mkMod(c1.id,'MED-103','Physiologie humaine',      50,60, [MED]),
+    mkMod(c1.id,'PHA-101','Chimie pharmaceutique',    65,60, [PHA]),
+
+    /* 2ème Année */
+    mkMod(c2.id,'MED-201','Pharmacologie générale',   60,60, BOTH),
+    mkMod(c2.id,'MED-202','Pathologie générale',      70,60, [MED]),
+    mkMod(c2.id,'PHA-201','Galénique et formulation', 55,65, [PHA]),
+
+    /* 3ème Année */
+    mkMod(c3.id,'MED-301','Sémiologie clinique',      50,60, BOTH),
+    mkMod(c3.id,'MED-302','Cardiologie',              65,60, [MED]),
+    mkMod(c3.id,'PHA-301','Toxicologie',              45,60, [PHA]),
+
+    /* 4ème Année */
+    mkMod(c4.id,'MED-401','Santé publique',           40,60, BOTH),
+    mkMod(c4.id,'MED-402','Chirurgie générale',       70,60, [MED]),
+    mkMod(c4.id,'PHA-401','Pharmacie clinique',       55,60, [PHA]),
+
+    /* 5ème Année */
+    mkMod(c5.id,'MED-501','Éthique médicale',         30,60, BOTH),
+    mkMod(c5.id,'MED-502','Stage clinique',          100,65, [MED]),
+    mkMod(c5.id,'PHA-501','Stage pharmaceutique',     90,65, [PHA])
+  ];
+
+  /* ===== ETIDYAN — 2 pa group pa klas ===== */
+  const mk = (cid, sid, prenom, nom, username, filiere) => ({
+    id: uid(), classId: cid, student_id: sid, prenom, nom, filiere,
+    email: username.replace('.', '') + '@undh.edu.ht',
+    telephone: '+509 3712 0000', section: 'A',
+    adresse: 'Port-au-Prince, Haïti',
+    username, password: 'undh2026', date_creation: Date.now()
+  });
+
+  DB.students = [
+    mk(c1.id,'2026-UNDH-01','Jean','Baptiste','jean.baptiste', MED),
+    mk(c1.id,'2026-UNDH-02','Marie','Dorval','marie.dorval', MED),
+    mk(c1.id,'2026-UNDH-03','Widley','Fils-Aimé','widley.filsaime', PHA),
+    mk(c1.id,'2026-UNDH-04','Sandra','Lafontant','sandra.lafontant', PHA),
+
+    mk(c2.id,'2025-UNDH-11','David','Charles','david.charles', MED),
+    mk(c2.id,'2025-UNDH-12','Ruth','Alexandre','ruth.alexandre', MED),
+    mk(c2.id,'2025-UNDH-13','Marc','Thermidor','marc.thermidor', PHA),
+    mk(c2.id,'2025-UNDH-14','Nadège','Joseph','nadege.joseph', PHA),
+
+    mk(c3.id,'2024-UNDH-21','Rachelle','Pierre','rachelle.pierre', MED),
+    mk(c3.id,'2024-UNDH-22','Lovely','Toussaint','lovely.toussaint', MED),
+    mk(c3.id,'2024-UNDH-23','Frantz','Décius','frantz.decius', PHA),
+    mk(c3.id,'2024-UNDH-24','Micheline','Beauvais','micheline.beauvais', PHA),
+
+    mk(c4.id,'2023-UNDH-31','Kevin','Augustin','kevin.augustin', MED),
+    mk(c4.id,'2023-UNDH-32','Naïka','Bélizaire','naika.belizaire', MED),
+    mk(c4.id,'2023-UNDH-33','Stanley','Ménard','stanley.menard', PHA),
+    mk(c4.id,'2023-UNDH-34','Fabiola','Cadet','fabiola.cadet', PHA),
+
+    mk(c5.id,'2022-UNDH-41','Peterson','Valcin','peterson.valcin', MED),
+    mk(c5.id,'2022-UNDH-42','Guerline','Sanon','guerline.sanon', MED),
+    mk(c5.id,'2022-UNDH-43','Ricardo','Bazile','ricardo.bazile', PHA),
+    mk(c5.id,'2022-UNDH-44','Josiane','Étienne','josiane.etienne', PHA)
+  ];
+  DB.students.forEach((s, i) => { s.telephone = '+509 3712 00' + String(i + 1).padStart(2, '0'); });
+
+  /* ===== NÒT ===== */
+  DB.modules.forEach(m => {
+    DB.students.forEach(s => {
+      if (s.classId !== m.classId) return;
+      if (!m.groupes.includes(s.filiere)) return;
+      const seed = (s.student_id.charCodeAt(s.student_id.length - 1) * 7
+                  + m.code.charCodeAt(m.code.length - 1) * 3) % 55;
+      const note = 50 + seed;
+      DB.notes.push({
+        id: uid(), studentId: s.id, moduleId: m.id,
+        note_sur_100: note, statut: 'Évalué'
+      });
+    });
+  });
+
+  /* ===== EKONOMAT ===== */
+  const mkE = (sid, desc, due, paye, statut) =>
+    ({ id: uid(), studentId: sid, description: desc, montant_due: due, montant_paye: paye, statut });
+
+  DB.economat = DB.students.map((s, i) => {
+    const due = 40000 + (i % 3) * 4000;
+    const paye = i % 4 === 0 ? 0 : i % 4 === 1 ? due / 2 : due;
+    const statut = paye === 0 ? 'Impayé' : paye < due ? 'Partiel' : 'Soldé';
+    return mkE(s.id, 'Frais de scolarité — Semestre 1', due, paye, statut);
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+}
+
+function ensureDB() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { seedDB(); return; }
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed.classes || !parsed.modules || !parsed.students) seedDB();
+  } catch(_) { seedDB(); }
+}
+ensureDB();
+
+/* =================================================================
+   UI HELPERS
+================================================================= */
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+}
+
+function togglePwd(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const hidden = input.type === 'password';
+  input.type = hidden ? 'text' : 'password';
+  btn.querySelector('i').className = hidden ? 'fa-solid fa-eye-slash text-xs' : 'fa-solid fa-eye text-xs';
+}
+
+/* =================================================================
+   LOGIN MODAL
+================================================================= */
+function openLogin() {
+  document.getElementById('mobile-menu').classList.add('hidden');
+  document.getElementById('err-student').classList.add('hidden');
+  const m = document.getElementById('login-modal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+  setTimeout(() => document.getElementById('stu-user').focus(), 80);
+}
+
+function closeLogin() {
+  const m = document.getElementById('login-modal');
+  m.classList.add('hidden');
+  m.classList.remove('flex');
+  document.getElementById('err-student').classList.add('hidden');
+}
+
+/* Fèmen lè w klike sou backdrop oswa ESC */
+document.getElementById('login-modal').addEventListener('click', e => {
+  if (e.target.id === 'login-modal') closeLogin();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLogin();
+});
+
+/* =================================================================
+   LOGIN — ETIDYAN
+================================================================= */
+function studentLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById('stu-user').value.trim().toLowerCase();
+  const p = document.getElementById('stu-pass').value;
+  const err = document.getElementById('err-student');
+
+  const DB = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"students":[]}');
+  const stu = (DB.students || []).find(s =>
+    String(s.username || '').toLowerCase() === u && String(s.password || '') === p
+  );
+
+  if (stu) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role:'student', id: stu.id }));
+    err.classList.add('hidden');
+    window.location.href = 'dashboard.html';
+  } else {
+    err.textContent = '⚠️ Nom d\'utilisateur ou mot de passe incorrect.';
+    err.classList.remove('hidden');
+  }
+}
+
+/* =================================================================
+   REDIRECT SI DEJA KONEKTE
+================================================================= */
+(function checkSession() {
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    if (s.role === 'admin')   window.location.href = 'admin.html';
+    if (s.role === 'student') window.location.href = 'dashboard.html';
+  } catch(_) {}
+})();
+
+/* =================================================================
+   SMOOTH SCROLL
+================================================================= */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+  });
+});
+</script>
+</body>
+</html>
