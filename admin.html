@@ -16,15 +16,70 @@
   .nav-item.active i{color:#fb923c}
   .cred-badge{font-family:ui-monospace,monospace;font-size:.72rem;background:#fef3c7;color:#92400e;padding:.15rem .45rem;border-radius:.3rem;border:1px solid #fcd34d}
   .cred-user{font-family:ui-monospace,monospace;font-size:.72rem;background:#dbeafe;color:#1e40af;padding:.15rem .45rem;border-radius:.3rem;border:1px solid #93c5fd}
+  @media print {
+    .no-print{display:none !important}
+    body{background:#fff}
+  }
 </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
 
-<!-- APP -->
-<div id="admin-app" class="min-h-screen flex">
+<!-- ================================================================
+     EKRAN LOGIN ADMIN
+================================================================= -->
+<div id="admin-login-screen" class="hidden fixed inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 fade-in">
+    <div class="text-center mb-6">
+      <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png" alt="UNDH"
+           class="h-16 mx-auto mb-3 object-contain"
+           onerror="this.onerror=null;this.src='https://via.placeholder.com/120x60/1e3a8a/ffffff?text=UNDH';">
+      <h1 class="text-xl font-bold text-blue-900">Board Administrateur</h1>
+      <p class="text-xs text-gray-500 mt-1">Université Notre-Dame d'Haïti</p>
+    </div>
+
+    <div id="err-admin-login" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 text-xs p-3 rounded mb-4"></div>
+
+    <form onsubmit="adminLoginInside(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Identifiant Admin</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-user-shield text-xs"></i></span>
+          <input id="admin-user-inside" type="text" required value="admin"
+                 class="w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mot de passe</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-lock text-xs"></i></span>
+          <input id="admin-pass-inside" type="password" required value="undh2024"
+                 class="w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100">
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+        <i class="fa-solid fa-right-to-bracket mr-2"></i> Accéder au board
+      </button>
+    </form>
+
+    <p class="text-center text-[11px] text-gray-400 mt-5">
+      Demo: <code class="bg-gray-100 px-1 rounded">admin</code> / <code class="bg-gray-100 px-1 rounded">undh2024</code>
+    </p>
+
+    <div class="mt-5 pt-4 border-t border-gray-100 text-center">
+      <a href="index.html" class="text-xs text-gray-500 hover:text-blue-700">
+        <i class="fa-solid fa-arrow-left mr-1"></i> Retour au site
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     APP ADMIN
+================================================================= -->
+<div id="admin-app" class="hidden min-h-screen flex">
 
   <!-- SIDEBAR -->
-  <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-slate-900 text-slate-300 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform">
+  <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-slate-900 text-slate-300 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform no-print">
     <div class="p-5 border-b border-slate-800 flex items-center gap-3">
       <img src="https://fmss-pap.undh.edu.ht/assets/Logo_UNDH_final.png" alt="UNDH"
            class="h-10 w-auto object-contain bg-white/5 rounded p-1"
@@ -42,6 +97,7 @@
       <button data-view="students" onclick="switchView('students')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition"><i class="fa-solid fa-users w-5 text-center text-slate-500"></i> Étudiants</button>
       <button data-view="notes" onclick="switchView('notes')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition"><i class="fa-solid fa-pen-to-square w-5 text-center text-slate-500"></i> Notes</button>
       <button data-view="economat" onclick="switchView('economat')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition"><i class="fa-solid fa-coins w-5 text-center text-slate-500"></i> Économat</button>
+      <button data-view="graduates" onclick="switchView('graduates')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition"><i class="fa-solid fa-graduation-cap w-5 text-center text-slate-500"></i> Finissants</button>
       <div class="pt-4 mt-4 border-t border-slate-800">
         <button onclick="resetDemo()" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-red-900/40 text-red-400 transition"><i class="fa-solid fa-rotate-left w-5 text-center"></i> Réinitialiser</button>
       </div>
@@ -61,11 +117,11 @@
     </div>
   </aside>
 
-  <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
+  <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden no-print"></div>
 
   <!-- MAIN -->
   <main class="flex-1 flex flex-col min-w-0">
-    <header class="bg-white shadow-sm border-b sticky top-0 z-20">
+    <header class="bg-white shadow-sm border-b sticky top-0 z-20 no-print">
       <div class="px-4 md:px-6 py-3 flex justify-between items-center gap-3">
         <div class="flex items-center gap-3 min-w-0">
           <button onclick="toggleSidebar()" class="lg:hidden text-gray-600 text-xl"><i class="fa-solid fa-bars"></i></button>
@@ -81,32 +137,57 @@
 
       <!-- ============ OVERVIEW ============ -->
       <section id="view-overview" class="view">
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-700"><p class="text-xs text-gray-500 uppercase font-semibold mb-2">Classes</p><p id="stat-classes" class="text-3xl font-bold text-blue-900">0</p></div>
-          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-indigo-600"><p class="text-xs text-gray-500 uppercase font-semibold mb-2">Modules</p><p id="stat-modules" class="text-3xl font-bold text-blue-900">0</p></div>
-          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-orange-500"><p class="text-xs text-gray-500 uppercase font-semibold mb-2">Étudiants</p><p id="stat-students" class="text-3xl font-bold text-blue-900">0</p></div>
-          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-600"><p class="text-xs text-gray-500 uppercase font-semibold mb-2">Notes</p><p id="stat-notes" class="text-3xl font-bold text-blue-900">0</p></div>
-          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-purple-600"><p class="text-xs text-gray-500 uppercase font-semibold mb-2">Solde dû</p><p id="stat-solde" class="text-lg font-bold text-blue-900">0 HTG</p></div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-700">
+            <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Classes</p>
+            <p id="stat-classes" class="text-3xl font-bold text-blue-900">0</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-indigo-600">
+            <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Modules</p>
+            <p id="stat-modules" class="text-3xl font-bold text-blue-900">0</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-orange-500">
+            <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Étudiants actifs</p>
+            <p id="stat-students" class="text-3xl font-bold text-blue-900">0</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-700">
+            <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Finissants</p>
+            <p id="stat-graduates" class="text-3xl font-bold text-blue-900">0</p>
+          </div>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-6 mb-6">
           <div class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="font-bold text-blue-900 mb-4"><i class="fa-solid fa-school mr-2"></i>Répartition par classe</h3>
+            <h3 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-school text-slate-500"></i> Répartition par classe
+            </h3>
             <div id="overview-classes" class="space-y-3"></div>
           </div>
           <div class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="font-bold text-blue-900 mb-4"><i class="fa-solid fa-graduation-cap mr-2"></i>Répartition par filière</h3>
+            <h3 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-graduation-cap text-slate-500"></i> Répartition par filière
+            </h3>
             <div id="overview-filieres" class="space-y-4"></div>
           </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm p-6">
-          <h3 class="font-bold text-blue-900 mb-4"><i class="fa-solid fa-bolt mr-2"></i>Actions rapides</h3>
+          <h3 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-slate-500"></i> Actions rapides
+          </h3>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <button onclick="openStudentModal()" class="p-4 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-semibold text-sm text-left transition"><i class="fa-solid fa-user-plus text-xl mb-2 block"></i> Ajouter un étudiant</button>
-            <button onclick="openModuleModal()" class="p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-sm text-left transition"><i class="fa-solid fa-book-medical text-xl mb-2 block"></i> Ajouter un module</button>
-            <button onclick="switchView('notes')" class="p-4 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 font-semibold text-sm text-left transition"><i class="fa-solid fa-pen text-xl mb-2 block"></i> Saisir des notes</button>
-            <button onclick="switchView('economat')" class="p-4 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 font-semibold text-sm text-left transition"><i class="fa-solid fa-money-bill-wave text-xl mb-2 block"></i> Enregistrer un paiement</button>
+            <button onclick="openStudentModal()" class="p-4 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-semibold text-sm text-left transition border border-blue-100">
+              <i class="fa-solid fa-user-plus text-xl mb-2 block text-blue-700"></i> Ajouter un étudiant
+            </button>
+            <button onclick="openModuleModal()" class="p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-sm text-left transition border border-indigo-100">
+              <i class="fa-solid fa-book-medical text-xl mb-2 block text-indigo-700"></i> Ajouter un module
+            </button>
+            <button onclick="switchView('notes')" class="p-4 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 font-semibold text-sm text-left transition border border-green-100">
+              <i class="fa-solid fa-pen text-xl mb-2 block text-green-700"></i> Saisir des notes
+            </button>
+            <button onclick="switchView('economat')" class="p-4 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 font-semibold text-sm text-left transition border border-purple-100">
+              <i class="fa-solid fa-money-bill-wave text-xl mb-2 block text-purple-700"></i> Enregistrer un paiement
+            </button>
           </div>
         </div>
       </section>
@@ -114,8 +195,10 @@
       <!-- ============ CLASSES ============ -->
       <section id="view-classes" class="view hidden">
         <div class="flex justify-between items-center mb-4 gap-3 flex-wrap">
-          <p class="text-sm text-gray-600"><span id="classes-count">0</span> classe(s)</p>
-          <button onclick="openClassModal()" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition"><i class="fa-solid fa-plus mr-1"></i> Nouvelle classe</button>
+          <p class="text-sm text-gray-600"><span id="classes-count">0</span> classe(s) enregistrée(s)</p>
+          <button onclick="openClassModal()" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus mr-1"></i> Nouvelle classe
+          </button>
         </div>
         <div id="classes-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
       </section>
@@ -125,13 +208,15 @@
         <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex flex-wrap gap-3 items-center">
           <select id="module-filter-class" onchange="renderModules()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:border-blue-600"></select>
           <select id="module-filter-group" onchange="renderModules()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:border-blue-600">
-            <option value="all">Tous les groupes</option>
-            <option value="common">🎓+💊 Communs</option>
-            <option value="Médecine Générale">🎓 Médecine seulement</option>
-            <option value="Pharmacie">💊 Pharmacie seulement</option>
+            <option value="all">Toutes les catégories</option>
+            <option value="common">Modules communs</option>
+            <option value="Médecine Générale">Médecine seulement</option>
+            <option value="Pharmacie">Pharmacie seulement</option>
           </select>
           <div class="flex-1"></div>
-          <button onclick="openModuleModal()" class="bg-indigo-700 hover:bg-indigo-600 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition"><i class="fa-solid fa-plus mr-1"></i> Nouveau module</button>
+          <button onclick="openModuleModal()" class="bg-indigo-700 hover:bg-indigo-600 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus mr-1"></i> Nouveau module
+          </button>
         </div>
         <div id="modules-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
       </section>
@@ -141,19 +226,22 @@
         <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex flex-wrap gap-3 items-center">
           <div class="relative flex-1 min-w-[200px]">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
-            <input id="student-search" oninput="renderStudents()" type="search" placeholder="Rechercher…" class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-600">
+            <input id="student-search" oninput="renderStudents()" type="search" placeholder="Rechercher par nom, code, username..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-600">
           </div>
           <select id="student-filter-class" onchange="onClassFilterChange()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none"></select>
           <select id="student-filter-filiere" onchange="renderStudents()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none">
             <option value="all">Toutes les filières</option>
-            <option value="Médecine Générale">🎓 Médecine</option>
-            <option value="Pharmacie">💊 Pharmacie</option>
+            <option value="Médecine Générale">Médecine Générale</option>
+            <option value="Pharmacie">Pharmacie</option>
           </select>
-          <button onclick="openStudentModal()" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition"><i class="fa-solid fa-user-plus mr-1"></i> Ajouter</button>
+          <button onclick="openStudentModal()" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition">
+            <i class="fa-solid fa-user-plus mr-1"></i> Ajouter
+          </button>
         </div>
 
-        <div class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
-          <i class="fa-solid fa-lightbulb mr-1"></i> <strong>Etidyan gwoupe pa filière</strong> — Chak klas gen 2 group: 🎓 Médecine Générale ak 💊 Pharmacie.
+        <div class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-start gap-2">
+          <i class="fa-solid fa-circle-info mt-0.5"></i>
+          <span><strong>Étudiants groupés par filière</strong> — Chaque classe contient 2 groupes : Médecine Générale et Pharmacie.</span>
         </div>
 
         <div id="students-container" class="space-y-5"></div>
@@ -163,22 +251,19 @@
       <section id="view-notes" class="view hidden">
         <nav id="notes-breadcrumb" class="mb-4 flex items-center gap-2 text-sm text-gray-600 flex-wrap"></nav>
 
-        <!-- NIVO 1 -->
         <div id="notes-level-classes">
-          <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-700 rounded-lg text-sm text-blue-900">
-            <i class="fa-solid fa-circle-info mr-2"></i>
-            <strong>Klike sou yon klas</strong> pou wè tout modil li yo.
+          <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-700 rounded-lg text-sm text-blue-900 flex items-start gap-2">
+            <i class="fa-solid fa-circle-info mt-0.5"></i>
+            <span><strong>Sélectionnez une classe</strong> pour voir tous ses modules.</span>
           </div>
           <div id="notes-classes-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"></div>
         </div>
 
-        <!-- NIVO 2 -->
         <div id="notes-level-modules" class="hidden">
           <div id="notes-modules-info" class="mb-4"></div>
           <div id="notes-modules-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
-        <!-- NIVO 3 -->
         <div id="notes-level-students" class="hidden">
           <div id="notes-students-info" class="mb-4"></div>
           <div id="notes-students-wrapper" class="bg-white rounded-xl shadow-sm overflow-hidden"></div>
@@ -189,10 +274,13 @@
       <section id="view-economat" class="view hidden">
         <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex flex-wrap gap-3 items-center">
           <select id="eco-student-select" onchange="renderEconomat()" class="flex-1 min-w-[220px] border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:border-blue-600"></select>
-          <button onclick="openEcoModal()" class="bg-purple-700 hover:bg-purple-600 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition"><i class="fa-solid fa-plus mr-1"></i> Ajouter un frais</button>
+          <button onclick="openEcoModal()" class="bg-purple-700 hover:bg-purple-600 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus mr-1"></i> Ajouter un frais
+          </button>
         </div>
         <div id="eco-empty" class="hidden bg-white rounded-xl shadow-sm p-10 text-center text-gray-500">
-          <i class="fa-solid fa-coins text-4xl mb-3 text-gray-300"></i><p>Choisissez un étudiant.</p>
+          <i class="fa-solid fa-coins text-4xl mb-3 text-gray-300"></i>
+          <p>Sélectionnez un étudiant pour gérer ses paiements.</p>
         </div>
         <div id="eco-content" class="hidden">
           <div id="eco-student-card" class="bg-gradient-to-r from-purple-900 to-purple-700 text-white rounded-xl p-4 mb-4 flex items-center gap-4"></div>
@@ -217,6 +305,46 @@
         </div>
       </section>
 
+      <!-- ============ FINISSANTS ============ -->
+      <section id="view-graduates" class="view hidden">
+        <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-6 mb-6">
+          <div class="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold flex items-center gap-3">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Registre des Finissants
+              </h2>
+              <p class="text-sm text-blue-100 mt-2">Historique de toutes les promotions diplômées de l'UNDH</p>
+            </div>
+            <div class="flex gap-3">
+              <div class="bg-white/15 px-4 py-2 rounded-lg backdrop-blur text-center">
+                <p class="text-2xl font-bold" id="grad-total">0</p>
+                <p class="text-[10px] uppercase tracking-widest text-blue-100">Total finissants</p>
+              </div>
+              <div class="bg-white/15 px-4 py-2 rounded-lg backdrop-blur text-center">
+                <p class="text-2xl font-bold" id="grad-promotions">0</p>
+                <p class="text-[10px] uppercase tracking-widest text-blue-100">Promotions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex flex-wrap gap-3 items-center">
+          <div class="relative flex-1 min-w-[200px]">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
+            <input id="grad-search" oninput="renderGraduates()" type="search" placeholder="Rechercher un finissant..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-600">
+          </div>
+          <select id="grad-filter-promotion" onchange="renderGraduates()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:border-blue-600"></select>
+          <select id="grad-filter-filiere" onchange="renderGraduates()" class="border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:border-blue-600">
+            <option value="all">Toutes les filières</option>
+            <option value="Médecine Générale">Médecine Générale</option>
+            <option value="Pharmacie">Pharmacie</option>
+          </select>
+        </div>
+
+        <div id="graduates-container" class="space-y-5"></div>
+      </section>
+
     </div>
   </main>
 </div>
@@ -224,7 +352,7 @@
 <!-- ============ MODALS ============ -->
 
 <!-- STUDENT MODAL -->
-<div id="modal-student" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+<div id="modal-student" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto fade-in">
     <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
       <h3 id="student-modal-title" class="font-bold text-blue-900 text-lg">Ajouter un étudiant</h3>
@@ -246,18 +374,20 @@
       <div>
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Filière / Groupe *</label>
         <select id="stu-filiere" required class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm outline-none bg-blue-50 font-semibold">
-          <option value="Médecine Générale">🎓 Médecine Générale</option>
-          <option value="Pharmacie">💊 Pharmacie</option>
+          <option value="Médecine Générale">Médecine Générale</option>
+          <option value="Pharmacie">Pharmacie</option>
         </select>
       </div>
       <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
-        <p class="text-xs font-bold text-amber-800 uppercase mb-3"><i class="fa-solid fa-key mr-1"></i> Identifiants</p>
+        <p class="text-xs font-bold text-amber-800 uppercase mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-key"></i> Identifiants
+        </p>
         <div class="space-y-3">
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Username *</label>
             <div class="flex gap-2">
               <input id="stu-username" required class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono">
-              <button type="button" onclick="autoUsername()" class="px-3 bg-amber-100 hover:bg-amber-200 rounded-lg"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+              <button type="button" onclick="autoUsername()" class="px-3 bg-amber-100 hover:bg-amber-200 rounded-lg text-amber-800"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
             </div>
           </div>
           <div>
@@ -267,7 +397,7 @@
                 <input id="stu-password" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm font-mono">
                 <button type="button" onclick="togglePwd('stu-password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"><i class="fa-solid fa-eye text-xs"></i></button>
               </div>
-              <button type="button" onclick="autoPassword()" class="px-3 bg-amber-100 hover:bg-amber-200 rounded-lg"><i class="fa-solid fa-rotate"></i></button>
+              <button type="button" onclick="autoPassword()" class="px-3 bg-amber-100 hover:bg-amber-200 rounded-lg text-amber-800"><i class="fa-solid fa-rotate"></i></button>
             </div>
           </div>
         </div>
@@ -287,7 +417,7 @@
 </div>
 
 <!-- MODULE MODAL -->
-<div id="modal-module" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+<div id="modal-module" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto fade-in">
     <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
       <h3 id="module-modal-title" class="font-bold text-blue-900 text-lg">Nouveau module</h3>
@@ -309,17 +439,19 @@
         <input id="mod-seuil" type="number" min="0" max="100" required value="60" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
       </div>
       <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p class="text-xs font-bold text-blue-800 uppercase mb-3"><i class="fa-solid fa-users mr-1"></i> Groupes concernés</p>
+        <p class="text-xs font-bold text-blue-800 uppercase mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-users"></i> Groupes concernés
+        </p>
         <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer">
           <input type="checkbox" id="mod-group-med" class="w-4 h-4 text-blue-700 rounded">
-          <span class="text-sm font-semibold text-blue-900">🎓 Médecine Générale</span>
+          <span class="text-sm font-semibold text-blue-900">Médecine Générale</span>
         </label>
         <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer">
           <input type="checkbox" id="mod-group-pha" class="w-4 h-4 text-purple-700 rounded">
-          <span class="text-sm font-semibold text-purple-900">💊 Pharmacie</span>
+          <span class="text-sm font-semibold text-purple-900">Pharmacie</span>
         </label>
         <p class="text-[10px] text-blue-700 mt-2">
-          <i class="fa-solid fa-info-circle"></i> Tcheke youn oswa tou 2. Si tou 2 → module commun.
+          <i class="fa-solid fa-info-circle"></i> Cochez un ou les deux groupes. Si les deux sont cochés = module commun.
         </p>
       </div>
       <div class="flex justify-end gap-2 pt-2">
@@ -331,10 +463,12 @@
 </div>
 
 <!-- NOTE MODAL -->
-<div id="modal-note" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+<div id="modal-note" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-md fade-in">
     <div class="flex justify-between items-center px-6 py-4 border-b">
-      <h3 class="font-bold text-blue-900 text-lg"><i class="fa-solid fa-pen mr-2"></i>Saisir / Modifier une note</h3>
+      <h3 class="font-bold text-blue-900 text-lg flex items-center gap-2">
+        <i class="fa-solid fa-pen"></i> Saisir / Modifier une note
+      </h3>
       <button onclick="closeModal('modal-note')" class="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <form id="note-form" onsubmit="saveNoteEdit(event)" class="p-6 space-y-4">
@@ -364,7 +498,7 @@
                placeholder="—">
         <p class="text-[10px] text-gray-500 mt-2">
           <i class="fa-solid fa-info-circle text-blue-500"></i>
-          Si nòt &lt; seuil → ap paret <span class="text-red-600 font-bold">WOUJ</span> ak verdict <strong>ÉCHEC</strong>.
+          Si la note est inférieure au seuil, elle apparaîtra en rouge avec le verdict ÉCHEC.
         </p>
       </div>
 
@@ -387,7 +521,7 @@
 </div>
 
 <!-- ECO MODAL -->
-<div id="modal-eco" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+<div id="modal-eco" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg fade-in">
     <div class="flex justify-between items-center px-6 py-4 border-b">
       <h3 id="eco-modal-title" class="font-bold text-blue-900 text-lg">Ajouter un frais</h3>
@@ -414,7 +548,7 @@
 </div>
 
 <!-- CLASS MODAL -->
-<div id="modal-class" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4">
+<div id="modal-class" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-md fade-in">
     <div class="flex justify-between items-center px-6 py-4 border-b">
       <h3 id="class-modal-title" class="font-bold text-blue-900 text-lg">Nouvelle classe</h3>
@@ -435,15 +569,212 @@
   </div>
 </div>
 
+<!-- PROMOTE MODAL -->
+<div id="modal-promote" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto fade-in">
+    <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+      <div>
+        <h3 id="promote-modal-title" class="font-bold text-blue-900 text-lg">Promouvoir la classe</h3>
+        <p id="promote-modal-sub" class="text-xs text-gray-500 mt-0.5"></p>
+      </div>
+      <button onclick="closeModal('modal-promote')" class="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="promote-form" onsubmit="savePromote(event)" class="p-6 space-y-4">
+      <input type="hidden" id="promote-class-id">
+
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <label class="block text-xs font-bold text-blue-800 uppercase mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-arrow-up-right-dots"></i> Vers la classe
+        </label>
+        <select id="promote-target-class" required class="w-full px-3 py-2.5 border border-blue-300 rounded-lg text-sm bg-white outline-none focus:border-blue-600 font-semibold"></select>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-4">
+        <div class="flex justify-between items-center mb-3">
+          <p class="text-xs font-bold text-gray-700 uppercase flex items-center gap-2">
+            <i class="fa-solid fa-users"></i> Étudiants à promouvoir
+          </p>
+          <div class="flex gap-2">
+            <button type="button" onclick="toggleAllPromote(true)" class="text-[10px] bg-blue-100 hover:bg-blue-200 text-blue-800 px-2.5 py-1 rounded font-bold uppercase">Tout sélectionner</button>
+            <button type="button" onclick="toggleAllPromote(false)" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-700 px-2.5 py-1 rounded font-bold uppercase">Aucun</button>
+          </div>
+        </div>
+        <div id="promote-students-list" class="max-h-60 overflow-y-auto space-y-1"></div>
+      </div>
+
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded text-xs text-amber-900">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+        Les étudiants sélectionnés seront déplacés vers la classe cible. Leurs notes et données économat seront conservées.
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-promote')" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100">Annuler</button>
+        <button type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-blue-900 hover:bg-blue-800 text-white shadow">
+          <i class="fa-solid fa-arrow-up-right-dots mr-1"></i> Promouvoir
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- GRADUATE MODAL -->
+<div id="modal-graduate" class="hidden fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center p-4 no-print">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto fade-in">
+    <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+      <div>
+        <h3 class="font-bold text-blue-900 text-lg flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap"></i> Diplômer la classe
+        </h3>
+        <p id="graduate-modal-sub" class="text-xs text-gray-500 mt-0.5"></p>
+      </div>
+      <button onclick="closeModal('modal-graduate')" class="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="graduate-form" onsubmit="saveGraduate(event)" class="p-6 space-y-4">
+      <input type="hidden" id="graduate-class-id">
+
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+        <label class="block text-xs font-bold text-green-800 uppercase mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-calendar"></i> Promotion (année académique)
+        </label>
+        <input id="graduate-promotion" required placeholder="2024-2025" class="w-full px-3 py-2.5 border border-green-300 rounded-lg text-sm bg-white outline-none focus:border-green-600 font-semibold">
+        <p class="text-[10px] text-green-700 mt-1.5">
+          <i class="fa-solid fa-info-circle mr-1"></i>
+          Format: 2024-2025 (année de début - année de fin)
+        </p>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-4">
+        <div class="flex justify-between items-center mb-3">
+          <p class="text-xs font-bold text-gray-700 uppercase flex items-center gap-2">
+            <i class="fa-solid fa-users"></i> Étudiants à diplômer
+          </p>
+          <div class="flex gap-2">
+            <button type="button" onclick="toggleAllGraduate(true)" class="text-[10px] bg-green-100 hover:bg-green-200 text-green-800 px-2.5 py-1 rounded font-bold uppercase">Tout sélectionner</button>
+            <button type="button" onclick="toggleAllGraduate(false)" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-700 px-2.5 py-1 rounded font-bold uppercase">Aucun</button>
+          </div>
+        </div>
+        <div id="graduate-students-list" class="max-h-60 overflow-y-auto space-y-1"></div>
+      </div>
+
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded text-xs text-amber-900">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+        Les étudiants sélectionnés seront retirés de la liste des étudiants actifs et ajoutés à la liste des finissants. Leur historique complet (notes + économat) sera conservé.
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-graduate')" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100">Annuler</button>
+        <button type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-green-700 hover:bg-green-600 text-white shadow">
+          <i class="fa-solid fa-graduation-cap mr-1"></i> Diplômer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- GRADUATE DETAIL MODAL -->
+<div id="modal-graduate-detail" class="hidden fixed inset-0 bg-black/60 backdrop-blur z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto fade-in">
+    <!-- Header -->
+    <div class="flex justify-between items-start px-6 py-4 border-b sticky top-0 bg-white z-10 no-print">
+      <div class="flex items-center gap-4">
+        <div id="grad-detail-avatar" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold">--</div>
+        <div>
+          <h3 id="grad-detail-name" class="font-bold text-blue-900 text-xl">--</h3>
+          <div class="flex flex-wrap gap-2 mt-1 text-xs">
+            <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-mono" id="grad-detail-code">--</span>
+            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold">Promotion : <span id="grad-detail-promo">--</span></span>
+            <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold" id="grad-detail-filiere">--</span>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeModal('modal-graduate-detail')" class="w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500 flex items-center justify-center no-print">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-6">
+
+      <!-- Stats rapides -->
+      <div id="grad-detail-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+      <!-- Enfòmasyon pèsonèl -->
+      <div>
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
+          <i class="fa-solid fa-id-card text-blue-700"></i> Informations personnelles
+        </h4>
+        <div id="grad-detail-info"></div>
+      </div>
+
+      <!-- Nòt -->
+      <div>
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
+          <i class="fa-solid fa-file-lines text-green-700"></i> Historique académique
+          <span class="text-xs font-normal text-gray-500 ml-auto">Seuil de réussite mentionné pour chaque module</span>
+        </h4>
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700 text-xs uppercase">
+              <tr>
+                <th class="p-2 text-left">Code</th>
+                <th class="p-2 text-left">Module</th>
+                <th class="p-2 text-center">Durée</th>
+                <th class="p-2 text-center">Seuil</th>
+                <th class="p-2 text-center">Note</th>
+                <th class="p-2 text-center">Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="grad-detail-notes"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Ekonomat -->
+      <div>
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
+          <i class="fa-solid fa-coins text-purple-700"></i> Historique économat
+          <span class="text-xs font-normal text-gray-500 ml-auto">A tout payé ses frais ou non</span>
+        </h4>
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700 text-xs uppercase">
+              <tr>
+                <th class="p-2 text-left">Description</th>
+                <th class="p-2 text-right">Montant dû</th>
+                <th class="p-2 text-right">Montant payé</th>
+                <th class="p-2 text-right">Solde</th>
+                <th class="p-2 text-center">Statut</th>
+              </tr>
+            </thead>
+            <tbody id="grad-detail-eco"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="px-6 py-4 bg-gray-50 border-t flex justify-end gap-2 sticky bottom-0 no-print">
+      <button onclick="closeModal('modal-graduate-detail')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-200 hover:bg-gray-300 text-gray-700">
+        Fermer
+      </button>
+      <button onclick="window.print()" class="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-900 hover:bg-blue-800 text-white shadow">
+        <i class="fa-solid fa-print mr-1"></i> Imprimer
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* =================================================================
    UNDH — admin.html (Board Admin konplè)
 ================================================================= */
 const STORAGE_KEY = 'undh_portal_db_v2';
 const SESSION_KEY = 'undh_portal_session_v2';
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'undh2024';
 
-let DB = { classes: [], modules: [], students: [], notes: [], economat: [] };
+let DB = { classes: [], modules: [], students: [], notes: [], economat: [], graduates: [] };
 let activeClassFilter = 'all';
+let notesState = { level:'classes', classId:null, moduleId:null };
 
 /* ---------- Helpers ---------- */
 const uid = () => 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -453,36 +784,100 @@ const fmtMoney = v => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,max
 const slugify = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'.').replace(/\.+/g,'.').replace(/^\.|\.$/g,'');
 const randPwd = () => { const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return 'UNDH'+Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join(''); };
 
-/* ---------- AUTH ---------- */
-function checkAuth() {
-  const raw = sessionStorage.getItem(SESSION_KEY);
-  if (!raw) return false;
-  try { const s = JSON.parse(raw); return s.role === 'admin'; } catch(_) { return false; }
+function getCurrentPromotion() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  if (month >= 8) return year + '-' + (year + 1);
+  return (year - 1) + '-' + year;
 }
-if (!checkAuth()) { window.location.href = 'index.html'; }
+
+/* =================================================================
+   AUTH
+================================================================= */
+function checkAuth() {
+  let raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) raw = localStorage.getItem(SESSION_KEY);
+  if (!raw) return false;
+  try {
+    const s = JSON.parse(raw);
+    return s.role === 'admin';
+  } catch(_) { return false; }
+}
+
+function showAdminLogin() {
+  document.getElementById('admin-login-screen').classList.remove('hidden');
+  document.getElementById('admin-login-screen').classList.add('flex');
+  document.getElementById('admin-app').classList.add('hidden');
+  setTimeout(() => document.getElementById('admin-user-inside').focus(), 100);
+}
+
+function showAdminApp() {
+  document.getElementById('admin-login-screen').classList.add('hidden');
+  document.getElementById('admin-login-screen').classList.remove('flex');
+  document.getElementById('admin-app').classList.remove('hidden');
+  renderAll();
+  switchView('overview');
+}
+
+function adminLoginInside(e) {
+  e.preventDefault();
+  const u = document.getElementById('admin-user-inside').value.trim();
+  const p = document.getElementById('admin-pass-inside').value;
+  const err = document.getElementById('err-admin-login');
+
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    const session = JSON.stringify({ role:'admin' });
+    sessionStorage.setItem(SESSION_KEY, session);
+    localStorage.setItem(SESSION_KEY, session);
+    err.classList.add('hidden');
+    showAdminApp();
+  } else {
+    err.textContent = 'Identifiant ou mot de passe incorrect.';
+    err.classList.remove('hidden');
+  }
+}
 
 function logout() {
   sessionStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(SESSION_KEY);
   window.location.href = 'index.html';
 }
 
 /* ---------- DB ---------- */
-function saveDB() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
+function saveDB() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+}
+
 function loadDB() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) { window.location.href = 'index.html'; return; }
-  try { DB = JSON.parse(raw); } catch(_) { window.location.href = 'index.html'; }
+  if (!raw) {
+    console.warn('Base de données introuvable. Ouvrez index.html pour initialiser.');
+    return false;
+  }
+  try {
+    DB = JSON.parse(raw);
+    if (!DB.classes) DB.classes = [];
+    if (!DB.modules) DB.modules = [];
+    if (!DB.students) DB.students = [];
+    if (!DB.notes) DB.notes = [];
+    if (!DB.economat) DB.economat = [];
+    if (!DB.graduates) DB.graduates = [];
+    return true;
+  } catch(_) { return false; }
 }
-loadDB();
 
-/* ---------- Views ---------- */
+/* =================================================================
+   Views
+================================================================= */
 const VIEW_META = {
   overview: { title: "Vue d'ensemble", sub: "Tableau de bord administrateur" },
-  classes:  { title: "Gestion des classes", sub: "5 classes (1ère à 5ème année)" },
+  classes:  { title: "Gestion des classes", sub: "Classes de la 1ère à la 5ème année" },
   modules:  { title: "Gestion des modules", sub: "Modules communs et spécifiques par filière" },
-  students: { title: "Étudiants", sub: "2 groupes par classe: Médecine & Pharmacie" },
-  notes:    { title: "Saisie des notes", sub: "Klas → Modil → Etidyan" },
-  economat: { title: "Économat", sub: "Enregistrer les paiements et frais" }
+  students: { title: "Étudiants", sub: "2 groupes par classe : Médecine et Pharmacie" },
+  notes:    { title: "Saisie des notes", sub: "Classe → Module → Étudiant" },
+  economat: { title: "Économat", sub: "Enregistrer les paiements et frais" },
+  graduates:{ title: "Finissants", sub: "Historique complet des promotions diplômées" }
 };
 
 function switchView(view) {
@@ -500,6 +895,7 @@ function switchView(view) {
   if (view === 'students') renderStudents();
   if (view === 'notes')    { notesState = { level:'classes', classId:null, moduleId:null }; renderNotes(); }
   if (view === 'economat') { populateStudentSelects(); renderEconomat(); }
+  if (view === 'graduates'){ renderGraduates(); }
   if (window.innerWidth < 1024) toggleSidebar(true);
 }
 
@@ -518,9 +914,7 @@ function renderOverview() {
   document.getElementById('stat-classes').textContent = DB.classes.length;
   document.getElementById('stat-modules').textContent = DB.modules.length;
   document.getElementById('stat-students').textContent = DB.students.length;
-  document.getElementById('stat-notes').textContent = DB.notes.filter(n => n.note_sur_100 !== null && n.note_sur_100 !== undefined).length;
-  const solde = DB.economat.reduce((s,e) => s + Math.max(0, num(e.montant_due) - num(e.montant_paye)), 0);
-  document.getElementById('stat-solde').textContent = fmtMoney(solde);
+  document.getElementById('stat-graduates').textContent = DB.graduates.length;
 
   document.getElementById('overview-classes').innerHTML = DB.classes.map(c => {
     const count = DB.students.filter(s => s.classId === c.id).length;
@@ -530,7 +924,7 @@ function renderOverview() {
     return `<div>
       <div class="flex justify-between text-sm mb-1">
         <span class="font-semibold text-gray-800">${esc(c.nom)}</span>
-        <span class="text-gray-500 text-xs">🎓 ${meds} · 💊 ${pha}</span>
+        <span class="text-gray-500 text-xs">Médecine: ${meds} · Pharmacie: ${pha}</span>
       </div>
       <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden"><div class="bg-blue-700 h-2 rounded-full" style="width:${pct}%"></div></div>
     </div>`;
@@ -543,22 +937,35 @@ function renderOverview() {
   document.getElementById('overview-filieres').innerHTML = `
     <div>
       <div class="flex justify-between text-sm mb-1">
-        <span class="font-semibold text-blue-800"><i class="fa-solid fa-user-doctor mr-1"></i>Médecine Générale</span>
+        <span class="font-semibold text-blue-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-user-doctor text-xs"></i> Médecine Générale
+        </span>
         <span class="text-gray-600 text-xs font-bold">${meds} étudiant(s)</span>
       </div>
       <div class="w-full bg-blue-50 rounded-full h-3 overflow-hidden"><div class="bg-blue-700 h-3 rounded-full" style="width:${Math.round(meds/total*100)}%"></div></div>
     </div>
     <div>
       <div class="flex justify-between text-sm mb-1">
-        <span class="font-semibold text-purple-800"><i class="fa-solid fa-pills mr-1"></i>Pharmacie</span>
+        <span class="font-semibold text-purple-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-pills text-xs"></i> Pharmacie
+        </span>
         <span class="text-gray-600 text-xs font-bold">${pha} étudiant(s)</span>
       </div>
       <div class="w-full bg-purple-50 rounded-full h-3 overflow-hidden"><div class="bg-purple-700 h-3 rounded-full" style="width:${Math.round(pha/total*100)}%"></div></div>
     </div>
     <div class="pt-3 border-t border-gray-100 grid grid-cols-3 gap-3 text-center">
-      <div><p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 2).length}</p><p class="text-[10px] text-gray-500 uppercase">Modules communs</p></div>
-      <div><p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 1 && m.groupes[0]==='Médecine Générale').length}</p><p class="text-[10px] text-gray-500 uppercase">Médecine seule</p></div>
-      <div><p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 1 && m.groupes[0]==='Pharmacie').length}</p><p class="text-[10px] text-gray-500 uppercase">Pharmacie seule</p></div>
+      <div>
+        <p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 2).length}</p>
+        <p class="text-[10px] text-gray-500 uppercase">Modules communs</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 1 && m.groupes[0]==='Médecine Générale').length}</p>
+        <p class="text-[10px] text-gray-500 uppercase">Médecine seule</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-blue-900">${DB.modules.filter(m => m.groupes.length === 1 && m.groupes[0]==='Pharmacie').length}</p>
+        <p class="text-[10px] text-gray-500 uppercase">Pharmacie seule</p>
+      </div>
     </div>
   `;
 }
@@ -568,11 +975,17 @@ function renderOverview() {
 ================================================================= */
 function renderClasses() {
   document.getElementById('classes-count').textContent = DB.classes.length;
-  document.getElementById('classes-grid').innerHTML = DB.classes.map(c => {
+
+  const sorted = DB.classes.slice().sort((a, b) => (a.annee || 0) - (b.annee || 0));
+
+  document.getElementById('classes-grid').innerHTML = sorted.map(c => {
     const students = DB.students.filter(s => s.classId === c.id);
     const meds = students.filter(s => s.filiere === 'Médecine Générale').length;
     const pha  = students.filter(s => s.filiere === 'Pharmacie').length;
     const modules = DB.modules.filter(m => m.classId === c.id).length;
+
+    const higherClasses = DB.classes.filter(x => (x.annee || 0) > (c.annee || 0)).sort((a,b) => a.annee - b.annee);
+    const isFinalYear = (c.annee || 0) >= 5 || higherClasses.length === 0;
 
     return `
       <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden border border-gray-100">
@@ -589,21 +1002,40 @@ function renderClasses() {
           <div class="grid grid-cols-3 gap-2 text-xs mb-4">
             <div class="bg-blue-50 rounded p-2 text-center border-l-2 border-blue-700">
               <p class="font-bold text-blue-900 text-lg">${meds}</p>
-              <p class="text-blue-700 text-[9px] uppercase">🎓 Médecine</p>
+              <p class="text-blue-700 text-[9px] uppercase">Médecine</p>
             </div>
             <div class="bg-purple-50 rounded p-2 text-center border-l-2 border-purple-700">
               <p class="font-bold text-purple-900 text-lg">${pha}</p>
-              <p class="text-purple-700 text-[9px] uppercase">💊 Pharma</p>
+              <p class="text-purple-700 text-[9px] uppercase">Pharmacie</p>
             </div>
             <div class="bg-indigo-50 rounded p-2 text-center border-l-2 border-indigo-700">
               <p class="font-bold text-indigo-900 text-lg">${modules}</p>
-              <p class="text-indigo-700 text-[9px] uppercase">📖 Modil</p>
+              <p class="text-indigo-700 text-[9px] uppercase">Modules</p>
             </div>
           </div>
+
+          ${isFinalYear ? `
+            <button onclick="openGraduateModal('${c.id}')"
+                    class="w-full mb-2 bg-green-700 hover:bg-green-600 text-white text-xs font-bold py-2 rounded transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-graduation-cap"></i> Diplômer la classe
+            </button>
+          ` : `
+            <button onclick="openPromoteModal('${c.id}')"
+                    class="w-full mb-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-2 rounded transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-up-right-dots"></i> Promouvoir vers classe supérieure
+            </button>
+          `}
+
           <div class="flex gap-2">
-            <button onclick="filterByClass('${c.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold py-2 rounded transition"><i class="fa-solid fa-users mr-1"></i> Étudiants</button>
-            <button onclick="openClassModal('${c.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 rounded transition"><i class="fa-solid fa-pen"></i></button>
-            <button onclick="deleteClass('${c.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-3 rounded transition"><i class="fa-solid fa-trash"></i></button>
+            <button onclick="filterByClass('${c.id}')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold py-2 rounded transition">
+              <i class="fa-solid fa-users mr-1"></i> Étudiants
+            </button>
+            <button onclick="openClassModal('${c.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 rounded transition" title="Modifier">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button onclick="deleteClass('${c.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-3 rounded transition" title="Supprimer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
         </div>
       </div>`;
@@ -612,6 +1044,557 @@ function renderClasses() {
 
 function filterByClass(cid) { activeClassFilter = cid; switchView('students'); }
 function onClassFilterChange() { activeClassFilter = document.getElementById('student-filter-class').value; renderStudents(); }
+
+/* ---------- PROMOTE MODAL ---------- */
+function openPromoteModal(classId) {
+  const c = DB.classes.find(x => x.id === classId);
+  if (!c) return;
+
+  const higherClasses = DB.classes
+    .filter(x => (x.annee || 0) > (c.annee || 0))
+    .sort((a, b) => (a.annee || 0) - (b.annee || 0));
+
+  if (!higherClasses.length) {
+    alert('Aucune classe supérieure disponible. Utilisez "Diplômer la classe" pour les finissants.');
+    return;
+  }
+
+  document.getElementById('promote-class-id').value = classId;
+  document.getElementById('promote-modal-title').textContent = 'Promouvoir : ' + c.nom;
+  document.getElementById('promote-modal-sub').textContent = `Déplacer les étudiants vers une classe supérieure`;
+
+  const targetSel = document.getElementById('promote-target-class');
+  targetSel.innerHTML = higherClasses.map(h =>
+    `<option value="${h.id}">${esc(h.nom)} (${esc(h.code)})</option>`
+  ).join('');
+
+  const students = DB.students.filter(s => s.classId === classId);
+  const listDiv = document.getElementById('promote-students-list');
+
+  if (!students.length) {
+    listDiv.innerHTML = '<p class="text-sm text-gray-500 italic p-3">Aucun étudiant dans cette classe.</p>';
+  } else {
+    listDiv.innerHTML = students
+      .sort((a, b) => a.filiere.localeCompare(b.filiere) || a.nom.localeCompare(b.nom))
+      .map(s => {
+        const color = s.filiere === 'Médecine Générale' ? 'blue' : 'purple';
+        return `
+          <label class="flex items-center gap-3 p-2.5 hover:bg-white rounded border border-gray-200 cursor-pointer transition">
+            <input type="checkbox" class="promote-student-cb w-4 h-4 text-blue-700 rounded" value="${s.id}" checked>
+            <span class="w-7 h-7 rounded-full bg-${color}-100 text-${color}-800 text-[10px] font-bold flex items-center justify-center shrink-0">
+              ${esc((s.prenom||'?')[0].toUpperCase() + (s.nom||'?')[0].toUpperCase())}
+            </span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-800 truncate">${esc(s.prenom)} ${esc(s.nom)}</p>
+              <p class="text-[10px] text-gray-500">${esc(s.student_id)} · ${esc(s.filiere)}</p>
+            </div>
+          </label>`;
+      }).join('');
+  }
+
+  document.getElementById('modal-promote').classList.remove('hidden');
+  document.getElementById('modal-promote').classList.add('flex');
+}
+
+function toggleAllPromote(checked) {
+  document.querySelectorAll('.promote-student-cb').forEach(cb => cb.checked = checked);
+}
+
+function savePromote(e) {
+  e.preventDefault();
+  const classId = document.getElementById('promote-class-id').value;
+  const targetClassId = document.getElementById('promote-target-class').value;
+  const selected = Array.from(document.querySelectorAll('.promote-student-cb:checked')).map(cb => cb.value);
+
+  if (!selected.length) return alert('Sélectionnez au moins un étudiant.');
+
+  const targetClass = DB.classes.find(c => c.id === targetClassId);
+  const sourceClass = DB.classes.find(c => c.id === classId);
+
+  const msg = `Promouvoir ${selected.length} étudiant(s) de "${sourceClass.nom}" vers "${targetClass.nom}" ?`;
+  if (!confirm(msg)) return;
+
+  selected.forEach(sid => {
+    const s = DB.students.find(x => x.id === sid);
+    if (s) s.classId = targetClassId;
+  });
+
+  saveDB();
+  closeModal('modal-promote');
+  renderClasses();
+  renderOverview();
+  alert(`${selected.length} étudiant(s) promu(s) avec succès.`);
+}
+
+/* ---------- GRADUATE MODAL ---------- */
+function openGraduateModal(classId) {
+  const c = DB.classes.find(x => x.id === classId);
+  if (!c) return;
+
+  document.getElementById('graduate-class-id').value = classId;
+  document.getElementById('graduate-modal-sub').textContent = 'Classe : ' + c.nom;
+  document.getElementById('graduate-promotion').value = getCurrentPromotion();
+
+  const students = DB.students.filter(s => s.classId === classId);
+  const listDiv = document.getElementById('graduate-students-list');
+
+  if (!students.length) {
+    listDiv.innerHTML = '<p class="text-sm text-gray-500 italic p-3">Aucun étudiant dans cette classe.</p>';
+  } else {
+    listDiv.innerHTML = students
+      .sort((a, b) => a.filiere.localeCompare(b.filiere) || a.nom.localeCompare(b.nom))
+      .map(s => {
+        const color = s.filiere === 'Médecine Générale' ? 'blue' : 'purple';
+        return `
+          <label class="flex items-center gap-3 p-2.5 hover:bg-white rounded border border-gray-200 cursor-pointer transition">
+            <input type="checkbox" class="graduate-student-cb w-4 h-4 text-green-700 rounded" value="${s.id}" checked>
+            <span class="w-7 h-7 rounded-full bg-${color}-100 text-${color}-800 text-[10px] font-bold flex items-center justify-center shrink-0">
+              ${esc((s.prenom||'?')[0].toUpperCase() + (s.nom||'?')[0].toUpperCase())}
+            </span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-800 truncate">${esc(s.prenom)} ${esc(s.nom)}</p>
+              <p class="text-[10px] text-gray-500">${esc(s.student_id)} · ${esc(s.filiere)}</p>
+            </div>
+          </label>`;
+      }).join('');
+  }
+
+  document.getElementById('modal-graduate').classList.remove('hidden');
+  document.getElementById('modal-graduate').classList.add('flex');
+}
+
+function toggleAllGraduate(checked) {
+  document.querySelectorAll('.graduate-student-cb').forEach(cb => cb.checked = checked);
+}
+
+function saveGraduate(e) {
+  e.preventDefault();
+  const classId = document.getElementById('graduate-class-id').value;
+  const promotion = document.getElementById('graduate-promotion').value.trim();
+  const selected = Array.from(document.querySelectorAll('.graduate-student-cb:checked')).map(cb => cb.value);
+
+  if (!selected.length) return alert('Sélectionnez au moins un étudiant.');
+  if (!promotion) return alert('Entrez la promotion (ex: 2024-2025).');
+
+  const sourceClass = DB.classes.find(c => c.id === classId);
+  const msg = `Diplômer ${selected.length} étudiant(s) de "${sourceClass.nom}" pour la promotion "${promotion}" ?\n\nIls seront ajoutés à la liste des finissants et retirés des étudiants actifs.`;
+  if (!confirm(msg)) return;
+
+  selected.forEach(sid => {
+    const s = DB.students.find(x => x.id === sid);
+    if (!s) return;
+
+    /* ===== RECUPERE TOUT ISTWA ETIDYAN AN ===== */
+
+    /* 1. Nòt yo — ak detay modil yo */
+    const studentNotes = DB.notes
+      .filter(n => n.studentId === sid)
+      .map(n => {
+        const mod = DB.modules.find(m => m.id === n.moduleId);
+        const hasNote = n.note_sur_100 !== null && n.note_sur_100 !== undefined;
+        return {
+          moduleId: n.moduleId,
+          code_module: mod?.code || '—',
+          nom_module: mod?.nom || '—',
+          duree: mod?.duree || 0,
+          seuil: mod?.seuil || 60,
+          groupes: mod?.groupes || [],
+          note_sur_100: hasNote ? num(n.note_sur_100) : null,
+          statut: n.statut || 'Évalué',
+          verdict: hasNote
+            ? (num(n.note_sur_100) >= (mod?.seuil || 60) ? 'SUCCÈS' : 'ÉCHEC')
+            : '—'
+        };
+      });
+
+    /* 2. Statistik akademik */
+    const evaluated = studentNotes.filter(n => n.note_sur_100 !== null && n.note_sur_100 !== undefined);
+    const modulesReussis = evaluated.filter(n => n.verdict === 'SUCCÈS').length;
+    const modulesEchoues = evaluated.filter(n => n.verdict === 'ÉCHEC').length;
+    const modulesNonEvalues = studentNotes.length - evaluated.length;
+    const moyenneGenerale = evaluated.length
+      ? (evaluated.reduce((a, n) => a + num(n.note_sur_100), 0) / evaluated.length).toFixed(2)
+      : '0.00';
+    const diplome = evaluated.length > 0 && modulesEchoues === 0;
+
+    /* 3. Ekonomi — tout frè yo */
+    const studentEco = DB.economat
+      .filter(ec => ec.studentId === sid)
+      .map(ec => ({
+        description: ec.description,
+        montant_due: num(ec.montant_due),
+        montant_paye: num(ec.montant_paye),
+        solde: num(ec.montant_due) - num(ec.montant_paye),
+        statut: ec.statut
+      }));
+
+    const totalDue = studentEco.reduce((a, ec) => a + ec.montant_due, 0);
+    const totalPaye = studentEco.reduce((a, ec) => a + ec.montant_paye, 0);
+    const soldeRestant = totalDue - totalPaye;
+    const ecoSolde = soldeRestant <= 0;
+
+    /* 4. Ajoute nan graduates */
+    DB.graduates.push({
+      id: uid(),
+      student_id: s.student_id,
+      prenom: s.prenom,
+      nom: s.nom,
+      filiere: s.filiere,
+      email: s.email,
+      telephone: s.telephone,
+      section: s.section,
+      adresse: s.adresse,
+      username: s.username,
+      classId_origin: classId,
+      classCode_origin: sourceClass?.code || '—',
+      classNom_origin: sourceClass?.nom || '—',
+      annee_origin: sourceClass?.annee || 0,
+      promotion,
+      date_graduation: Date.now(),
+
+      /* Akademik */
+      notes: studentNotes,
+      modulesReussis,
+      modulesEchoues,
+      modulesNonEvalues,
+      moyenneGenerale,
+      diplome,
+
+      /* Ekonomi */
+      economat: studentEco,
+      totalDue,
+      totalPaye,
+      soldeRestant,
+      ecoSolde
+    });
+  });
+
+  DB.students = DB.students.filter(s => !selected.includes(s.id));
+
+  saveDB();
+  closeModal('modal-graduate');
+  renderClasses();
+  renderOverview();
+  renderGraduates();
+  alert(`${selected.length} étudiant(s) diplômé(s) avec succès.\nPromotion : ${promotion}`);
+}
+
+/* =================================================================
+   GRADUATES (Finissants)
+================================================================= */
+function renderGraduates() {
+  const container = document.getElementById('graduates-container');
+  const gradTotal = document.getElementById('grad-total');
+  const gradPromotions = document.getElementById('grad-promotions');
+
+  const total = DB.graduates.length;
+  const promotions = [...new Set(DB.graduates.map(g => g.promotion))].sort().reverse();
+
+  gradTotal.textContent = total;
+  gradPromotions.textContent = promotions.length;
+
+  const promoFilter = document.getElementById('grad-filter-promotion');
+  const currentVal = promoFilter.value;
+  promoFilter.innerHTML = '<option value="all">Toutes les promotions</option>' +
+    promotions.map(p => `<option value="${p}">${esc(p)}</option>`).join('');
+  if (promotions.includes(currentVal)) promoFilter.value = currentVal;
+
+  const q = (document.getElementById('grad-search')?.value || '').toLowerCase().trim();
+  const promoVal = promoFilter.value;
+  const filFilter = document.getElementById('grad-filter-filiere')?.value || 'all';
+
+  let list = DB.graduates.slice();
+  if (promoVal !== 'all') list = list.filter(g => g.promotion === promoVal);
+  if (filFilter !== 'all') list = list.filter(g => g.filiere === filFilter);
+  if (q) list = list.filter(g =>
+    (g.nom + ' ' + g.prenom + ' ' + g.student_id).toLowerCase().includes(q)
+  );
+
+  if (!list.length) {
+    container.innerHTML = `
+      <div class="bg-white rounded-xl shadow-sm p-10 text-center text-gray-500">
+        <i class="fa-solid fa-graduation-cap text-4xl mb-3 text-gray-300"></i>
+        <p class="font-semibold">Aucun finissant</p>
+        <p class="text-xs mt-1">Les étudiants diplômés apparaîtront ici.</p>
+      </div>`;
+    return;
+  }
+
+  const groups = {};
+  list.forEach(g => {
+    if (!groups[g.promotion]) groups[g.promotion] = [];
+    groups[g.promotion].push(g);
+  });
+
+  const sortedPromos = Object.keys(groups).sort().reverse();
+  let html = '';
+
+  sortedPromos.forEach(promo => {
+    const grads = groups[promo].sort((a, b) =>
+      a.filiere.localeCompare(b.filiere) || a.nom.localeCompare(b.nom)
+    );
+
+    const medCount = grads.filter(g => g.filiere === 'Médecine Générale').length;
+    const phaCount = grads.filter(g => g.filiere === 'Pharmacie').length;
+    const totalPaye = grads.filter(g => g.ecoSolde).length;
+    const totalDiplome = grads.filter(g => g.diplome).length;
+
+    html += `
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden border-t-4 border-blue-900">
+        <div class="px-5 py-4 bg-gradient-to-r from-blue-900 to-blue-700 text-white flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-graduation-cap text-2xl text-blue-200"></i>
+            <div>
+              <p class="text-[10px] uppercase tracking-widest text-blue-200">Promotion</p>
+              <h3 class="font-bold text-lg">${esc(promo)}</h3>
+            </div>
+          </div>
+          <div class="flex gap-2 text-xs flex-wrap">
+            <span class="bg-white/15 px-3 py-1.5 rounded-full font-semibold">Total : ${grads.length}</span>
+            <span class="bg-blue-500/30 px-3 py-1.5 rounded-full font-semibold">Médecine : ${medCount}</span>
+            <span class="bg-purple-500/30 px-3 py-1.5 rounded-full font-semibold">Pharmacie : ${phaCount}</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-gray-50 border-b text-center text-xs">
+          <div>
+            <p class="text-gray-500 uppercase font-semibold text-[10px]">Total diplômés</p>
+            <p class="text-lg font-bold text-blue-900">${grads.length}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 uppercase font-semibold text-[10px]">Ont réussi tous les modules</p>
+            <p class="text-lg font-bold text-green-700">${totalDiplome}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 uppercase font-semibold text-[10px]">Ont soldé l'économat</p>
+            <p class="text-lg font-bold text-green-700">${totalPaye}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 uppercase font-semibold text-[10px]">Avec solde impayé</p>
+            <p class="text-lg font-bold text-red-700">${grads.length - totalPaye}</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+              <tr>
+                <th class="p-3 text-left">Code</th>
+                <th class="p-3 text-left">Nom complet</th>
+                <th class="p-3 text-left">Filière</th>
+                <th class="p-3 text-center">Modules</th>
+                <th class="p-3 text-center">Moyenne</th>
+                <th class="p-3 text-center">Économat</th>
+                <th class="p-3 text-center">Diplômé le</th>
+                <th class="p-3 text-center">Détails</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${grads.map(g => {
+                const color = g.filiere === 'Médecine Générale' ? 'blue' : 'purple';
+                const icon = g.filiere === 'Médecine Générale' ? 'fa-user-doctor' : 'fa-pills';
+                const initiales = (g.prenom?.[0]||'?').toUpperCase() + (g.nom?.[0]||'').toUpperCase();
+                const dateStr = g.date_graduation
+                  ? new Date(g.date_graduation).toLocaleDateString('fr-FR')
+                  : '—';
+
+                const totalMod = (g.modulesReussis || 0) + (g.modulesEchoues || 0) + (g.modulesNonEvalues || 0);
+                const modBadge = (g.modulesEchoues || 0) > 0
+                  ? `<span class="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded font-bold">${g.modulesReussis}/${totalMod}</span>`
+                  : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-1 rounded font-bold">${g.modulesReussis}/${totalMod}</span>`;
+
+                const moyColor = num(g.moyenneGenerale) >= 60 ? 'text-green-700' : 'text-red-600';
+                const moyBadge = `<span class="text-sm font-bold ${moyColor}">${g.moyenneGenerale}</span>`;
+
+                const ecoBadge = g.ecoSolde
+                  ? `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-1 rounded font-bold" title="A tout payé">Soldé</span>`
+                  : `<span class="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded font-bold" title="${fmtMoney(g.soldeRestant)} impayé">Impayé</span>`;
+
+                return `
+                  <tr class="border-b border-gray-100 hover:bg-${color}-50/40">
+                    <td class="p-3 font-semibold text-${color}-800 text-xs font-mono">${esc(g.student_id)}</td>
+                    <td class="p-3">
+                      <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-${color}-100 text-${color}-800 text-xs font-bold flex items-center justify-center shrink-0">${esc(initiales)}</span>
+                        <span class="font-medium">${esc(g.prenom)} ${esc(g.nom)}</span>
+                      </div>
+                    </td>
+                    <td class="p-3">
+                      <span class="bg-${color}-50 text-${color}-800 text-[10px] px-2 py-1 rounded border border-${color}-200 font-semibold">
+                        <i class="fa-solid ${icon} mr-1"></i>${esc(g.filiere)}
+                      </span>
+                    </td>
+                    <td class="p-3 text-center">${modBadge}</td>
+                    <td class="p-3 text-center">${moyBadge}</td>
+                    <td class="p-3 text-center">${ecoBadge}</td>
+                    <td class="p-3 text-center text-xs text-gray-600">${dateStr}</td>
+                    <td class="p-3">
+                      <div class="flex justify-center">
+                        <button onclick="openGraduateDetailModal('${g.id}')"
+                                class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold px-3 py-1.5 rounded transition flex items-center gap-1.5">
+                          <i class="fa-solid fa-eye"></i> Voir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+/* =================================================================
+   GRADUATE DETAIL MODAL
+================================================================= */
+function openGraduateDetailModal(gradId) {
+  const g = DB.graduates.find(x => x.id === gradId);
+  if (!g) return;
+
+  const color = g.filiere === 'Médecine Générale' ? 'blue' : 'purple';
+  const initiales = (g.prenom?.[0]||'?').toUpperCase() + (g.nom?.[0]||'').toUpperCase();
+
+  /* TITRE */
+  document.getElementById('grad-detail-name').textContent = `${g.prenom} ${g.nom}`;
+  document.getElementById('grad-detail-code').textContent = g.student_id;
+  document.getElementById('grad-detail-promo').textContent = g.promotion;
+  document.getElementById('grad-detail-filiere').textContent = g.filiere;
+  const av = document.getElementById('grad-detail-avatar');
+  av.textContent = initiales;
+  av.className = `w-16 h-16 rounded-full bg-${color}-100 text-${color}-800 flex items-center justify-center text-2xl font-bold border-2 border-${color}-300`;
+
+  /* KAT STATISTIK */
+  const diplomeBadge = g.diplome
+    ? `<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">OUI</span>`
+    : `<span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-bold">NON</span>`;
+
+  document.getElementById('grad-detail-stats').innerHTML = `
+    <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 text-center">
+      <p class="text-[10px] text-blue-700 uppercase font-semibold">Modules réussis</p>
+      <p class="text-xl font-bold text-blue-900 mt-1">${g.modulesReussis}</p>
+    </div>
+    <div class="bg-red-50 border border-red-100 rounded-lg p-3 text-center">
+      <p class="text-[10px] text-red-700 uppercase font-semibold">Modules échoués</p>
+      <p class="text-xl font-bold text-red-900 mt-1">${g.modulesEchoues}</p>
+    </div>
+    <div class="bg-orange-50 border border-orange-100 rounded-lg p-3 text-center">
+      <p class="text-[10px] text-orange-700 uppercase font-semibold">Moyenne générale</p>
+      <p class="text-xl font-bold text-orange-900 mt-1">${g.moyenneGenerale}</p>
+    </div>
+    <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 text-center">
+      <p class="text-[10px] text-gray-600 uppercase font-semibold">Diplômé</p>
+      <p class="mt-1">${diplomeBadge}</p>
+    </div>
+  `;
+
+  /* TABLO NÒT */
+  const notesRows = (g.notes || []).map(n => {
+    const isFailed = n.verdict === 'ÉCHEC';
+    const isNone = n.note_sur_100 === null || n.note_sur_100 === undefined;
+    return `
+      <tr class="border-b border-gray-100 ${isFailed ? 'bg-red-50/50' : ''}">
+        <td class="p-2 font-mono text-xs font-semibold text-gray-700">${esc(n.code_module)}</td>
+        <td class="p-2 text-sm">${esc(n.nom_module)}</td>
+        <td class="p-2 text-center text-xs text-gray-500">${n.duree}h</td>
+        <td class="p-2 text-center text-xs font-semibold text-red-700">${n.seuil}%</td>
+        <td class="p-2 text-center">
+          ${isNone
+            ? `<span class="text-gray-400 italic text-xs">—</span>`
+            : `<span class="font-bold text-sm ${isFailed ? 'text-red-600' : 'text-green-700'}">${n.note_sur_100}</span>`}
+        </td>
+        <td class="p-2 text-center">
+          ${isNone
+            ? `<span class="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">—</span>`
+            : isFailed
+              ? `<span class="bg-red-100 text-red-800 text-[10px] px-2 py-0.5 rounded font-bold">ÉCHEC</span>`
+              : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded font-bold">SUCCÈS</span>`}
+        </td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('grad-detail-notes').innerHTML = notesRows || `
+    <tr><td colspan="6" class="p-4 text-center text-gray-500 italic">Aucune note enregistrée.</td></tr>
+  `;
+
+  /* TABLO EKONOMAT */
+  const ecoRows = (g.economat || []).map(ec => {
+    const isPaid = ec.solde <= 0;
+    return `
+      <tr class="border-b border-gray-100 ${isPaid ? '' : 'bg-red-50/50'}">
+        <td class="p-2 text-sm">${esc(ec.description)}</td>
+        <td class="p-2 text-right text-sm">${fmtMoney(ec.montant_due)}</td>
+        <td class="p-2 text-right text-sm">${fmtMoney(ec.montant_paye)}</td>
+        <td class="p-2 text-right text-sm font-semibold ${ec.solde > 0 ? 'text-red-600' : 'text-green-700'}">${fmtMoney(ec.solde)}</td>
+        <td class="p-2 text-center">
+          <span class="${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} text-[10px] px-2 py-0.5 rounded font-bold">${esc(ec.statut)}</span>
+        </td>
+      </tr>`;
+  }).join('');
+
+  const ecoBadgeGlobal = g.ecoSolde
+    ? `<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">SOLDÉ</span>`
+    : `<span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-bold">IMPAYÉ</span>`;
+
+  const ecoTotalRow = `
+    <tr class="bg-gray-100 font-bold border-t-2 border-gray-300">
+      <td class="p-2 text-sm">TOTAL</td>
+      <td class="p-2 text-right text-sm">${fmtMoney(g.totalDue)}</td>
+      <td class="p-2 text-right text-sm">${fmtMoney(g.totalPaye)}</td>
+      <td class="p-2 text-right text-sm ${g.soldeRestant > 0 ? 'text-red-700' : 'text-green-700'}">${fmtMoney(g.soldeRestant)}</td>
+      <td class="p-2 text-center">${ecoBadgeGlobal}</td>
+    </tr>`;
+
+  document.getElementById('grad-detail-eco').innerHTML = (ecoRows + ecoTotalRow) || `
+    <tr><td colspan="5" class="p-4 text-center text-gray-500 italic">Aucun frais enregistré.</td></tr>
+  `;
+
+  /* ENFÒMASYON PÈSONÈL */
+  document.getElementById('grad-detail-info').innerHTML = `
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Nom complet</p>
+        <p class="font-semibold">${esc(g.prenom)} ${esc(g.nom)}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Code étudiant</p>
+        <p class="font-semibold font-mono">${esc(g.student_id)}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Promotion</p>
+        <p class="font-semibold">${esc(g.promotion)}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Email</p>
+        <p class="font-semibold text-xs break-all">${esc(g.email) || '—'}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Téléphone</p>
+        <p class="font-semibold">${esc(g.telephone) || '—'}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Classe d'origine</p>
+        <p class="font-semibold">${esc(g.classNom_origin)}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Section</p>
+        <p class="font-semibold">${esc(g.section) || '—'}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Adresse</p>
+        <p class="font-semibold text-xs">${esc(g.adresse) || '—'}</p>
+      </div>
+      <div class="bg-gray-50 rounded p-2">
+        <p class="text-[10px] uppercase text-gray-500 font-bold">Date de diplôme</p>
+        <p class="font-semibold">${g.date_graduation ? new Date(g.date_graduation).toLocaleDateString('fr-FR') : '—'}</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modal-graduate-detail').classList.remove('hidden');
+  document.getElementById('modal-graduate-detail').classList.add('flex');
+}
 
 /* =================================================================
    MODULES
@@ -635,7 +1618,8 @@ function renderModules() {
 
   const grid = document.getElementById('modules-grid');
   if (!list.length) {
-    grid.innerHTML = `<div class="col-span-full bg-white rounded-xl p-8 text-center text-gray-500"><i class="fa-solid fa-book text-3xl text-gray-300 mb-2 block"></i>Aucun module.</div>`;
+    grid.innerHTML = `<div class="col-span-full bg-white rounded-xl p-8 text-center text-gray-500">
+      <i class="fa-solid fa-book text-3xl text-gray-300 mb-2 block"></i>Aucun module.</div>`;
     return;
   }
 
@@ -644,7 +1628,7 @@ function renderModules() {
     const isCommon = m.groupes.length === 2;
     const borderCls = isCommon ? 'border-amber-500' : m.groupes[0]==='Médecine Générale' ? 'border-blue-700' : 'border-purple-700';
     const badgeCls  = isCommon ? 'bg-amber-100 text-amber-800' : m.groupes[0]==='Médecine Générale' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
-    const badgeLbl  = isCommon ? '🎓+💊 Commun' : m.groupes[0]==='Médecine Générale' ? '🎓 Médecine' : '💊 Pharmacie';
+    const badgeLbl  = isCommon ? 'Commun' : m.groupes[0]==='Médecine Générale' ? 'Médecine' : 'Pharmacie';
     const studentCount = DB.students.filter(s => s.classId === m.classId && m.groupes.includes(s.filiere)).length;
 
     return `
@@ -654,16 +1638,33 @@ function renderModules() {
           <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${badgeCls}">${badgeLbl}</span>
         </div>
         <h3 class="font-bold text-gray-800 text-sm mb-1">${esc(m.nom)}</h3>
-        <p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-school mr-1"></i>${esc(c?.nom || '—')}</p>
+        <p class="text-xs text-gray-500 mb-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-school text-[10px]"></i>${esc(c?.nom || '—')}
+        </p>
         <div class="grid grid-cols-3 gap-2 text-xs mb-3">
-          <div class="bg-gray-50 rounded p-2 text-center"><p class="text-[9px] text-gray-500 uppercase">Dire</p><p class="font-bold text-gray-800">${m.duree}h</p></div>
-          <div class="bg-red-50 rounded p-2 text-center border border-red-100"><p class="text-[9px] text-red-600 uppercase">Seuil</p><p class="font-bold text-red-700">${m.seuil}%</p></div>
-          <div class="bg-blue-50 rounded p-2 text-center border border-blue-100"><p class="text-[9px] text-blue-600 uppercase">Etid.</p><p class="font-bold text-blue-700">${studentCount}</p></div>
+          <div class="bg-gray-50 rounded p-2 text-center">
+            <p class="text-[9px] text-gray-500 uppercase">Durée</p>
+            <p class="font-bold text-gray-800">${m.duree}h</p>
+          </div>
+          <div class="bg-red-50 rounded p-2 text-center border border-red-100">
+            <p class="text-[9px] text-red-600 uppercase">Seuil</p>
+            <p class="font-bold text-red-700">${m.seuil}%</p>
+          </div>
+          <div class="bg-blue-50 rounded p-2 text-center border border-blue-100">
+            <p class="text-[9px] text-blue-600 uppercase">Étud.</p>
+            <p class="font-bold text-blue-700">${studentCount}</p>
+          </div>
         </div>
         <div class="flex gap-2">
-          <button onclick="showNotesStudents('${m.classId}','${m.id}'); switchView('notes')" class="flex-1 bg-green-50 hover:bg-green-100 text-green-800 text-xs font-semibold py-2 rounded transition"><i class="fa-solid fa-pen mr-1"></i> Notes</button>
-          <button onclick="openModuleModal('${m.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 rounded transition"><i class="fa-solid fa-pen"></i></button>
-          <button onclick="deleteModule('${m.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-3 rounded transition"><i class="fa-solid fa-trash"></i></button>
+          <button onclick="showNotesStudents('${m.classId}','${m.id}'); switchView('notes')" class="flex-1 bg-green-50 hover:bg-green-100 text-green-800 text-xs font-semibold py-2 rounded transition">
+            <i class="fa-solid fa-pen mr-1"></i> Notes
+          </button>
+          <button onclick="openModuleModal('${m.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 rounded transition" title="Modifier">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button onclick="deleteModule('${m.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-3 rounded transition" title="Supprimer">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
       </div>`;
   }).join('');
@@ -702,7 +1703,7 @@ function saveModule(e) {
   const groupes = [];
   if (document.getElementById('mod-group-med').checked) groupes.push('Médecine Générale');
   if (document.getElementById('mod-group-pha').checked) groupes.push('Pharmacie');
-  if (!groupes.length) return alert('⚠️ Chwazi omwen yon group.');
+  if (!groupes.length) return alert('Sélectionnez au moins un groupe.');
 
   const data = {
     classId: document.getElementById('mod-class').value,
@@ -721,7 +1722,7 @@ function saveModule(e) {
 
 function deleteModule(id) {
   const m = DB.modules.find(x => x.id === id);
-  if (!m || !confirm(`Supprimer le module « ${m.nom} » ?\nToutes les notes liées seront supprimées.`)) return;
+  if (!m || !confirm(`Supprimer le module "${m.nom}" ?\nToutes les notes liées seront supprimées.`)) return;
   DB.modules = DB.modules.filter(x => x.id !== id);
   DB.notes = DB.notes.filter(n => n.moduleId !== id);
   saveDB(); renderModules(); renderOverview();
@@ -800,7 +1801,7 @@ function renderStudents() {
                 const initiales = (s.prenom||'?')[0].toUpperCase() + (s.nom||'?')[0].toUpperCase();
                 return `
                   <tr class="border-b border-gray-100 hover:bg-${meta.color}-50/40">
-                    <td class="p-3 font-semibold text-${meta.color}-800 text-xs">${esc(s.student_id)}</td>
+                    <td class="p-3 font-semibold text-${meta.color}-800 text-xs font-mono">${esc(s.student_id)}</td>
                     <td class="p-3">
                       <div class="flex items-center gap-2">
                         <span class="w-8 h-8 rounded-full bg-${meta.color}-100 text-${meta.color}-800 text-xs font-bold flex items-center justify-center shrink-0">${esc(initiales)}</span>
@@ -815,9 +1816,9 @@ function renderStudents() {
                     <td class="p-3"><span class="cred-badge">${esc(s.password || '—')}</span></td>
                     <td class="p-3">
                       <div class="flex justify-center gap-1">
-                        <button onclick="loginAsStudentById('${s.id}')" class="w-8 h-8 rounded text-orange-600 hover:bg-orange-100 transition" title="Login"><i class="fa-solid fa-right-to-bracket"></i></button>
+                        <button onclick="loginAsStudentById('${s.id}')" class="w-8 h-8 rounded text-orange-600 hover:bg-orange-100 transition" title="Se connecter en tant qu'étudiant"><i class="fa-solid fa-right-to-bracket"></i></button>
                         <button onclick="goToStudentNotes('${s.id}')" class="w-8 h-8 rounded text-green-700 hover:bg-green-100 transition" title="Notes"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="goToEco('${s.id}')" class="w-8 h-8 rounded text-purple-700 hover:bg-purple-100 transition" title="Éco"><i class="fa-solid fa-coins"></i></button>
+                        <button onclick="goToEco('${s.id}')" class="w-8 h-8 rounded text-purple-700 hover:bg-purple-100 transition" title="Économat"><i class="fa-solid fa-coins"></i></button>
                         <button onclick="openStudentModal('${s.id}')" class="w-8 h-8 rounded text-blue-700 hover:bg-blue-100 transition" title="Modifier"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="deleteStudent('${s.id}')" class="w-8 h-8 rounded text-red-600 hover:bg-red-100 transition" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
                       </div>
@@ -888,8 +1889,8 @@ function saveStudent(e) {
     section: document.getElementById('stu-section').value.trim(),
     adresse: document.getElementById('stu-adresse').value.trim()
   };
-  if (DB.students.find(s => s.student_id === data.student_id && s.id !== id)) return alert('⚠️ Code déjà utilisé.');
-  if (DB.students.find(s => s.username === username && s.id !== id)) return alert('⚠️ Username déjà pris.');
+  if (DB.students.find(s => s.student_id === data.student_id && s.id !== id)) return alert('Ce code étudiant existe déjà.');
+  if (DB.students.find(s => s.username === username && s.id !== id)) return alert('Ce nom d\'utilisateur est déjà pris.');
 
   if (id) Object.assign(DB.students.find(x => x.id === id), data);
   else DB.students.push({ id: uid(), date_creation: Date.now(), ...data });
@@ -905,16 +1906,16 @@ function deleteStudent(id) {
   saveDB(); renderAll();
 }
 
-/* ---------- Login as student ---------- */
 function loginAsStudentById(id) {
   const s = DB.students.find(x => x.id === id);
   if (!s) return;
   if (!confirm(`Se connecter en tant que ${s.prenom} ${s.nom} ?`)) return;
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role:'student', id: s.id }));
+  const session = JSON.stringify({ role:'student', id: s.id });
+  sessionStorage.setItem(SESSION_KEY, session);
+  localStorage.setItem(SESSION_KEY, session);
   window.location.href = 'dashboard.html';
 }
 
-/* ---------- Go to notes/economat for a student ---------- */
 function goToStudentNotes(studentId) {
   const s = DB.students.find(x => x.id === studentId);
   if (!s) return;
@@ -931,17 +1932,14 @@ function goToEco(id) {
 }
 
 /* =================================================================
-   NOTES — 3 Nivo: Klas → Modil → Etidyan
+   NOTES — 3 Nivo
 ================================================================= */
-let notesState = { level: 'classes', classId: null, moduleId: null };
-
 function renderNotes() {
   if (notesState.level === 'classes')       showNotesClasses();
   else if (notesState.level === 'modules')  showNotesModules(notesState.classId);
   else                                       showNotesStudents(notesState.classId, notesState.moduleId);
 }
 
-/* ----- NIVO 1: KLAS ----- */
 function showNotesClasses() {
   notesState = { level:'classes', classId:null, moduleId:null };
   document.getElementById('notes-level-classes').classList.remove('hidden');
@@ -961,7 +1959,7 @@ function showNotesClasses() {
               class="bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition p-5 text-left border-t-4 border-blue-700">
         <div class="flex justify-between items-start mb-3">
           <span class="text-[10px] uppercase font-bold text-blue-700 tracking-widest">${esc(c.code)}</span>
-          <span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full font-bold">${modules.length} modil</span>
+          <span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full font-bold">${modules.length} modules</span>
         </div>
         <h3 class="font-bold text-blue-900 text-lg mb-3">${esc(c.nom)}</h3>
         <div class="space-y-1 text-xs text-gray-600">
@@ -969,13 +1967,12 @@ function showNotesClasses() {
           <p><i class="fa-solid fa-pills text-purple-700 w-4"></i> ${pha} Pharmacie</p>
         </div>
         <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-blue-700 font-semibold flex items-center justify-between">
-          <span>Wè modil yo</span><i class="fa-solid fa-arrow-right"></i>
+          <span>Voir les modules</span><i class="fa-solid fa-arrow-right"></i>
         </div>
       </button>`;
   }).join('');
 }
 
-/* ----- NIVO 2: MODIL YON KLAS ----- */
 function showNotesModules(classId) {
   const c = DB.classes.find(x => x.id === classId);
   if (!c) return showNotesClasses();
@@ -999,11 +1996,11 @@ function showNotesModules(classId) {
       <div>
         <p class="text-xs uppercase tracking-widest text-blue-200">${esc(c.code)}</p>
         <h2 class="text-xl font-bold">${esc(c.nom)}</h2>
-        <p class="text-sm text-blue-100 mt-1">${modules.length} modil · ${meds + pha} etidyan</p>
+        <p class="text-sm text-blue-100 mt-1">${modules.length} modules · ${meds + pha} étudiants</p>
       </div>
       <div class="flex gap-2 text-xs">
-        <span class="bg-white/15 px-3 py-1.5 rounded-full"><i class="fa-solid fa-user-doctor mr-1"></i>${meds} Med</span>
-        <span class="bg-white/15 px-3 py-1.5 rounded-full"><i class="fa-solid fa-pills mr-1"></i>${pha} Pharma</span>
+        <span class="bg-white/15 px-3 py-1.5 rounded-full"><i class="fa-solid fa-user-doctor mr-1"></i>${meds} Médecine</span>
+        <span class="bg-white/15 px-3 py-1.5 rounded-full"><i class="fa-solid fa-pills mr-1"></i>${pha} Pharmacie</span>
       </div>
     </div>`;
 
@@ -1019,7 +2016,7 @@ function showNotesModules(classId) {
     const studentCount = DB.students.filter(s => s.classId === classId && m.groupes.includes(s.filiere)).length;
     const borderCls = isCommon ? 'border-amber-500' : m.groupes[0]==='Médecine Générale' ? 'border-blue-700' : 'border-purple-700';
     const badgeCls  = isCommon ? 'bg-amber-100 text-amber-800' : m.groupes[0]==='Médecine Générale' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
-    const badgeLbl  = isCommon ? '🎓+💊 Commun' : m.groupes[0]==='Médecine Générale' ? '🎓 Médecine' : '💊 Pharmacie';
+    const badgeLbl  = isCommon ? 'Commun' : m.groupes[0]==='Médecine Générale' ? 'Médecine' : 'Pharmacie';
 
     return `
       <button onclick="showNotesStudents('${classId}','${m.id}')"
@@ -1030,18 +2027,23 @@ function showNotesModules(classId) {
         </div>
         <h3 class="font-bold text-gray-800 text-sm mb-3">${esc(m.nom)}</h3>
         <div class="grid grid-cols-2 gap-2 text-xs">
-          <div class="bg-gray-50 rounded p-2 text-center"><p class="text-[10px] text-gray-500 uppercase">Dire</p><p class="font-bold text-gray-800">${m.duree} h</p></div>
-          <div class="bg-red-50 rounded p-2 text-center border border-red-100"><p class="text-[10px] text-red-600 uppercase">Seuil</p><p class="font-bold text-red-700">${m.seuil}%</p></div>
+          <div class="bg-gray-50 rounded p-2 text-center">
+            <p class="text-[10px] text-gray-500 uppercase">Durée</p>
+            <p class="font-bold text-gray-800">${m.duree} h</p>
+          </div>
+          <div class="bg-red-50 rounded p-2 text-center border border-red-100">
+            <p class="text-[10px] text-red-600 uppercase">Seuil</p>
+            <p class="font-bold text-red-700">${m.seuil}%</p>
+          </div>
         </div>
         <div class="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600 flex justify-between">
-          <span><i class="fa-solid fa-users mr-1"></i>${studentCount} etidyan</span>
-          <span class="text-blue-700 font-bold">Wè →</span>
+          <span><i class="fa-solid fa-users mr-1"></i>${studentCount} étudiant(s)</span>
+          <span class="text-blue-700 font-bold">Voir →</span>
         </div>
       </button>`;
   }).join('');
 }
 
-/* ----- NIVO 3: ETIDYAN YON MODIL ----- */
 function showNotesStudents(classId, moduleId) {
   const c = DB.classes.find(x => x.id === classId);
   const m = DB.modules.find(x => x.id === moduleId);
@@ -1060,7 +2062,7 @@ function showNotesStudents(classId, moduleId) {
     <span class="font-semibold text-blue-900">${esc(m.code)}</span>`;
 
   const isCommon = m.groupes.length === 2;
-  const badgeLbl = isCommon ? '🎓+💊 Module commun' : m.groupes[0]==='Médecine Générale' ? '🎓 Médecine Générale' : '💊 Pharmacie';
+  const badgeLbl = isCommon ? 'Module commun' : m.groupes[0]==='Médecine Générale' ? 'Médecine Générale' : 'Pharmacie';
   const borderCls = isCommon ? 'border-amber-500' : m.groupes[0]==='Médecine Générale' ? 'border-blue-700' : 'border-purple-700';
 
   document.getElementById('notes-students-info').innerHTML = `
@@ -1070,7 +2072,7 @@ function showNotesStudents(classId, moduleId) {
           <p class="font-mono text-xs text-gray-500">${esc(m.code)}</p>
           <h2 class="text-lg font-bold text-blue-900">${esc(m.nom)}</h2>
           <p class="text-xs text-gray-600 mt-1">
-            ${esc(c.nom)} · ${m.duree}h · Seuil de réussite: <strong class="text-red-700">${m.seuil}%</strong>
+            ${esc(c.nom)} · ${m.duree}h · Seuil de réussite : <strong class="text-red-700">${m.seuil}%</strong>
           </p>
         </div>
         <span class="text-xs px-3 py-1 rounded-full font-bold ${isCommon ? 'bg-amber-100 text-amber-800' : m.groupes[0]==='Médecine Générale' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">${badgeLbl}</span>
@@ -1129,7 +2131,7 @@ function showNotesStudents(classId, moduleId) {
 
             return `
               <tr class="border-b border-gray-100 ${isFailed ? 'bg-red-50/60' : 'hover:bg-gray-50'}">
-                <td class="p-3 font-semibold text-${filColor}-800 text-xs">${esc(s.student_id)}</td>
+                <td class="p-3 font-semibold text-${filColor}-800 text-xs font-mono">${esc(s.student_id)}</td>
                 <td class="p-3">
                   <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-${filColor}-100 text-${filColor}-800 text-xs font-bold flex items-center justify-center">${esc(initiales)}</span>
@@ -1174,7 +2176,6 @@ function showNotesStudents(classId, moduleId) {
     </div>`;
 }
 
-/* ----- MODAL NÒT ----- */
 function openNoteEditModal(studentId, moduleId) {
   const s = DB.students.find(x => x.id === studentId);
   const m = DB.modules.find(x => x.id === moduleId);
@@ -1213,7 +2214,7 @@ function saveNoteEdit(e) {
     }
   } else {
     const val = num(raw);
-    if (val < 0 || val > 100) return alert('⚠️ La note doit être entre 0 et 100.');
+    if (val < 0 || val > 100) return alert('La note doit être entre 0 et 100.');
     if (noteId) {
       const n = DB.notes.find(x => x.id === noteId);
       if (n) { n.note_sur_100 = val; n.statut = statut; }
@@ -1256,19 +2257,18 @@ function renderEconomat() {
   const s = DB.students.find(x => x.id === sid);
   const cls = DB.classes.find(c => c.id === s.classId);
   const ini = (s.prenom?.[0]||'?').toUpperCase() + (s.nom?.[0]||'').toUpperCase();
-  const filColor = s.filiere === 'Médecine Générale' ? 'blue' : 'purple';
 
   document.getElementById('eco-student-card').innerHTML = `
     <span class="w-14 h-14 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-xl font-bold">${esc(ini)}</span>
     <div class="flex-1 min-w-0">
       <p class="font-bold text-lg truncate">${esc(s.prenom)} ${esc(s.nom)}</p>
-      <p class="text-xs text-purple-100">${esc(s.student_id)} • ${esc(cls?.nom || '—')} • ${esc(s.filiere)}</p>
+      <p class="text-xs text-purple-100">${esc(s.student_id)} · ${esc(cls?.nom || '—')} · ${esc(s.filiere)}</p>
     </div>`;
 
   const list = DB.economat.filter(e => e.studentId === sid);
   const tbody = document.getElementById('eco-table');
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500"><i class="fa-solid fa-file-invoice-dollar text-3xl mb-2 block text-gray-300"></i>Aucun frais. Cliquez sur « Ajouter un frais ».</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500"><i class="fa-solid fa-file-invoice-dollar text-3xl mb-2 block text-gray-300"></i>Aucun frais. Cliquez sur "Ajouter un frais".</td></tr>`;
   } else {
     tbody.innerHTML = list.map(e => {
       const due = num(e.montant_due), paye = num(e.montant_paye), solde = due - paye;
@@ -1284,8 +2284,8 @@ function renderEconomat() {
           <td class="p-3 text-center"><span class="${cls2} text-xs px-2 py-1 rounded font-semibold">${esc(e.statut)}</span></td>
           <td class="p-3">
             <div class="flex justify-center gap-1">
-              <button onclick="openEcoModal('${e.id}')" class="w-8 h-8 rounded text-blue-700 hover:bg-blue-100 transition"><i class="fa-solid fa-pen"></i></button>
-              <button onclick="deleteEco('${e.id}')" class="w-8 h-8 rounded text-red-600 hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>
+              <button onclick="openEcoModal('${e.id}')" class="w-8 h-8 rounded text-blue-700 hover:bg-blue-100 transition" title="Modifier"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="deleteEco('${e.id}')" class="w-8 h-8 rounded text-red-600 hover:bg-red-100 transition" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>`;
@@ -1378,7 +2378,7 @@ function deleteClass(id) {
   if (!c) return;
   const count = DB.students.filter(s => s.classId === id).length;
   const mods = DB.modules.filter(m => m.classId === id).length;
-  const msg = `Supprimer « ${c.nom} » ?\n\n${count} étudiant(s) et ${mods} module(s) seront supprimés avec leurs notes et données économat.`;
+  const msg = `Supprimer "${c.nom}" ?\n\n${count} étudiant(s) et ${mods} module(s) seront supprimés avec leurs notes et données économat.`;
   if (!confirm(msg)) return;
 
   const stuIds = DB.students.filter(s => s.classId === id).map(s => s.id);
@@ -1400,7 +2400,7 @@ function deleteClass(id) {
 ================================================================= */
 function renderAll() {
   renderOverview(); renderClasses(); renderModules(); renderStudents();
-  populateStudentSelects(); renderEconomat();
+  populateStudentSelects(); renderEconomat(); renderGraduates();
 }
 
 function resetDemo() {
@@ -1411,11 +2411,11 @@ function resetDemo() {
 
 /* ---------- Modal helpers ---------- */
 function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } }
-['modal-student','modal-module','modal-note','modal-eco','modal-class'].forEach(id => {
+['modal-student','modal-module','modal-note','modal-eco','modal-class','modal-promote','modal-graduate','modal-graduate-detail'].forEach(id => {
   document.getElementById(id)?.addEventListener('click', e => { if (e.target.id === id) closeModal(id); });
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') ['modal-student','modal-module','modal-note','modal-eco','modal-class'].forEach(closeModal);
+  if (e.key === 'Escape') ['modal-student','modal-module','modal-note','modal-eco','modal-class','modal-promote','modal-graduate','modal-graduate-detail'].forEach(closeModal);
 });
 
 function togglePwd(inputId, btn) {
@@ -1433,8 +2433,15 @@ function togglePwd(inputId, btn) {
 /* =================================================================
    BOOT
 ================================================================= */
-renderAll();
-switchView('overview');
+(function boot() {
+  const dbOk = loadDB();
+
+  if (checkAuth() && dbOk) {
+    showAdminApp();
+  } else {
+    showAdminLogin();
+  }
+})();
 </script>
 </body>
 </html>
