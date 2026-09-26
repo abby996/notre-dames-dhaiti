@@ -241,7 +241,7 @@
 
         <div class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-start gap-2">
           <i class="fa-solid fa-circle-info mt-0.5"></i>
-          <span><strong>Étudiants groupés par filière</strong> — Chaque classe contient 2 groupes : Médecine Générale et Pharmacie.</span>
+          <span><strong>Étudiants groupés par filière puis par classe</strong> — Chaque filière contient les étudiants de toutes les années, classés alphabétiquement par nom.</span>
         </div>
 
         <div id="students-container" class="space-y-5"></div>
@@ -674,7 +674,6 @@
 <!-- GRADUATE DETAIL MODAL -->
 <div id="modal-graduate-detail" class="hidden fixed inset-0 bg-black/60 backdrop-blur z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto fade-in">
-    <!-- Header -->
     <div class="flex justify-between items-start px-6 py-4 border-b sticky top-0 bg-white z-10 no-print">
       <div class="flex items-center gap-4">
         <div id="grad-detail-avatar" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold">--</div>
@@ -694,10 +693,8 @@
 
     <div class="p-6 space-y-6">
 
-      <!-- Stats rapides -->
       <div id="grad-detail-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
 
-      <!-- Enfòmasyon pèsonèl -->
       <div>
         <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
           <i class="fa-solid fa-id-card text-blue-700"></i> Informations personnelles
@@ -705,7 +702,6 @@
         <div id="grad-detail-info"></div>
       </div>
 
-      <!-- Nòt -->
       <div>
         <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
           <i class="fa-solid fa-file-lines text-green-700"></i> Historique académique
@@ -728,7 +724,6 @@
         </div>
       </div>
 
-      <!-- Ekonomat -->
       <div>
         <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
           <i class="fa-solid fa-coins text-purple-700"></i> Historique économat
@@ -874,7 +869,7 @@ const VIEW_META = {
   overview: { title: "Vue d'ensemble", sub: "Tableau de bord administrateur" },
   classes:  { title: "Gestion des classes", sub: "Classes de la 1ère à la 5ème année" },
   modules:  { title: "Gestion des modules", sub: "Modules communs et spécifiques par filière" },
-  students: { title: "Étudiants", sub: "2 groupes par classe : Médecine et Pharmacie" },
+  students: { title: "Étudiants", sub: "Groupés par filière puis par classe" },
   notes:    { title: "Saisie des notes", sub: "Classe → Module → Étudiant" },
   economat: { title: "Économat", sub: "Enregistrer les paiements et frais" },
   graduates:{ title: "Finissants", sub: "Historique complet des promotions diplômées" }
@@ -1184,9 +1179,6 @@ function saveGraduate(e) {
     const s = DB.students.find(x => x.id === sid);
     if (!s) return;
 
-    /* ===== RECUPERE TOUT ISTWA ETIDYAN AN ===== */
-
-    /* 1. Nòt yo — ak detay modil yo */
     const studentNotes = DB.notes
       .filter(n => n.studentId === sid)
       .map(n => {
@@ -1207,7 +1199,6 @@ function saveGraduate(e) {
         };
       });
 
-    /* 2. Statistik akademik */
     const evaluated = studentNotes.filter(n => n.note_sur_100 !== null && n.note_sur_100 !== undefined);
     const modulesReussis = evaluated.filter(n => n.verdict === 'SUCCÈS').length;
     const modulesEchoues = evaluated.filter(n => n.verdict === 'ÉCHEC').length;
@@ -1217,7 +1208,6 @@ function saveGraduate(e) {
       : '0.00';
     const diplome = evaluated.length > 0 && modulesEchoues === 0;
 
-    /* 3. Ekonomi — tout frè yo */
     const studentEco = DB.economat
       .filter(ec => ec.studentId === sid)
       .map(ec => ({
@@ -1233,7 +1223,6 @@ function saveGraduate(e) {
     const soldeRestant = totalDue - totalPaye;
     const ecoSolde = soldeRestant <= 0;
 
-    /* 4. Ajoute nan graduates */
     DB.graduates.push({
       id: uid(),
       student_id: s.student_id,
@@ -1251,16 +1240,12 @@ function saveGraduate(e) {
       annee_origin: sourceClass?.annee || 0,
       promotion,
       date_graduation: Date.now(),
-
-      /* Akademik */
       notes: studentNotes,
       modulesReussis,
       modulesEchoues,
       modulesNonEvalues,
       moyenneGenerale,
       diplome,
-
-      /* Ekonomi */
       economat: studentEco,
       totalDue,
       totalPaye,
@@ -1280,7 +1265,7 @@ function saveGraduate(e) {
 }
 
 /* =================================================================
-   GRADUATES (Finissants)
+   GRADUATES
 ================================================================= */
 function renderGraduates() {
   const container = document.getElementById('graduates-container');
@@ -1456,7 +1441,6 @@ function openGraduateDetailModal(gradId) {
   const color = g.filiere === 'Médecine Générale' ? 'blue' : 'purple';
   const initiales = (g.prenom?.[0]||'?').toUpperCase() + (g.nom?.[0]||'').toUpperCase();
 
-  /* TITRE */
   document.getElementById('grad-detail-name').textContent = `${g.prenom} ${g.nom}`;
   document.getElementById('grad-detail-code').textContent = g.student_id;
   document.getElementById('grad-detail-promo').textContent = g.promotion;
@@ -1465,7 +1449,6 @@ function openGraduateDetailModal(gradId) {
   av.textContent = initiales;
   av.className = `w-16 h-16 rounded-full bg-${color}-100 text-${color}-800 flex items-center justify-center text-2xl font-bold border-2 border-${color}-300`;
 
-  /* KAT STATISTIK */
   const diplomeBadge = g.diplome
     ? `<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">OUI</span>`
     : `<span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-bold">NON</span>`;
@@ -1489,7 +1472,6 @@ function openGraduateDetailModal(gradId) {
     </div>
   `;
 
-  /* TABLO NÒT */
   const notesRows = (g.notes || []).map(n => {
     const isFailed = n.verdict === 'ÉCHEC';
     const isNone = n.note_sur_100 === null || n.note_sur_100 === undefined;
@@ -1518,7 +1500,6 @@ function openGraduateDetailModal(gradId) {
     <tr><td colspan="6" class="p-4 text-center text-gray-500 italic">Aucune note enregistrée.</td></tr>
   `;
 
-  /* TABLO EKONOMAT */
   const ecoRows = (g.economat || []).map(ec => {
     const isPaid = ec.solde <= 0;
     return `
@@ -1550,7 +1531,6 @@ function openGraduateDetailModal(gradId) {
     <tr><td colspan="5" class="p-4 text-center text-gray-500 italic">Aucun frais enregistré.</td></tr>
   `;
 
-  /* ENFÒMASYON PÈSONÈL */
   document.getElementById('grad-detail-info').innerHTML = `
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
       <div class="bg-gray-50 rounded p-2">
@@ -1729,7 +1709,7 @@ function deleteModule(id) {
 }
 
 /* =================================================================
-   STUDENTS
+   STUDENTS — GWOUPE PA FILIÈRE → KLAS → NON ALFABETIK
 ================================================================= */
 function renderStudents() {
   const sel = document.getElementById('student-filter-class');
@@ -1760,58 +1740,109 @@ function renderStudents() {
     return;
   }
 
-  const groups = {};
+  /* ============================================================
+     1. GWOUPE PA FILIÈRE
+  ============================================================ */
+  const byFiliere = {};
   list.forEach(s => {
     const f = s.filiere || 'Autre';
-    if (!groups[f]) groups[f] = [];
-    groups[f].push(s);
+    if (!byFiliere[f]) byFiliere[f] = [];
+    byFiliere[f].push(s);
   });
 
-  const sortedFilieres = Object.keys(groups).sort();
+  const sortedFilieres = Object.keys(byFiliere).sort();
   let html = '';
 
   sortedFilieres.forEach(f => {
     const meta = FILIERE_META[f] || { color: 'gray', icon: 'fa-graduation-cap' };
-    const students = groups[f];
+    const filiereStudents = byFiliere[f];
 
+    /* ============================================================
+       2. SOU-GWOUPE PA KLAS (ANE)
+    ============================================================ */
+    const byClass = {};
+    filiereStudents.forEach(s => {
+      const cid = s.classId || 'unknown';
+      if (!byClass[cid]) byClass[cid] = [];
+      byClass[cid].push(s);
+    });
+
+    /* Klase klas yo pa ane (1ère → 5ème) */
+    const sortedClassIds = Object.keys(byClass).sort((a, b) => {
+      const ca = DB.classes.find(c => c.id === a);
+      const cb = DB.classes.find(c => c.id === b);
+      return (ca?.annee || 999) - (cb?.annee || 999);
+    });
+
+    /* Header filière */
     html += `
-      <div class="bg-white rounded-xl shadow-sm overflow-hidden border-t-4 border-${meta.color}-600">
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden border-t-4 border-${meta.color}-600 mb-5">
         <div class="px-5 py-3 bg-${meta.color}-50 border-b border-${meta.color}-100 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <i class="fa-solid ${meta.icon} text-${meta.color}-700 text-lg"></i>
             <span class="font-bold text-${meta.color}-900 text-sm uppercase tracking-wide">${esc(f)}</span>
           </div>
-          <span class="text-xs bg-${meta.color}-100 text-${meta.color}-800 px-2.5 py-1 rounded-full font-bold">${students.length} étudiant(s)</span>
+          <span class="text-xs bg-${meta.color}-100 text-${meta.color}-800 px-2.5 py-1 rounded-full font-bold">
+            ${filiereStudents.length} étudiant(s) · ${sortedClassIds.length} classe(s)
+          </span>
         </div>
+    `;
+
+    /* ============================================================
+       3. POU CHAK KLAS → YON SUB-SEKSYON
+    ============================================================ */
+    sortedClassIds.forEach(cid => {
+      const cls = DB.classes.find(c => c.id === cid);
+      const classStudents = byClass[cid].slice().sort((a, b) => {
+        /* Klase pa siyati, epi pa prenon */
+        const cmp = a.nom.localeCompare(b.nom, 'fr', { sensitivity: 'base' });
+        if (cmp !== 0) return cmp;
+        return a.prenom.localeCompare(b.prenom, 'fr', { sensitivity: 'base' });
+      });
+
+      html += `
+        <!-- Sub-header klas -->
+        <div class="px-5 py-2.5 bg-${meta.color}-50/40 border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-${meta.color}-600 text-xs"></i>
+            <span class="font-bold text-gray-800 text-sm">${esc(cls?.nom || 'Classe inconnue')}</span>
+            <span class="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded font-mono">${esc(cls?.code || '—')}</span>
+          </div>
+          <span class="text-[10px] text-gray-600 font-semibold uppercase tracking-wide">
+            ${classStudents.length} étudiant(s)
+          </span>
+        </div>
+
+        <!-- Tablo etidyan klas la -->
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
               <tr>
+                <th class="p-3 text-left w-12">#</th>
                 <th class="p-3 text-left">Code</th>
                 <th class="p-3 text-left">Nom complet</th>
-                <th class="p-3 text-left">Classe</th>
+                <th class="p-3 text-left">Section</th>
                 <th class="p-3 text-left">Username</th>
                 <th class="p-3 text-left">Mot de passe</th>
                 <th class="p-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              ${students.map(s => {
-                const cls = DB.classes.find(c => c.id === s.classId);
+              ${classStudents.map((s, idx) => {
                 const initiales = (s.prenom||'?')[0].toUpperCase() + (s.nom||'?')[0].toUpperCase();
                 return `
                   <tr class="border-b border-gray-100 hover:bg-${meta.color}-50/40">
+                    <td class="p-3 text-xs text-gray-500 font-semibold">${idx + 1}</td>
                     <td class="p-3 font-semibold text-${meta.color}-800 text-xs font-mono">${esc(s.student_id)}</td>
                     <td class="p-3">
                       <div class="flex items-center gap-2">
                         <span class="w-8 h-8 rounded-full bg-${meta.color}-100 text-${meta.color}-800 text-xs font-bold flex items-center justify-center shrink-0">${esc(initiales)}</span>
                         <div class="min-w-0">
-                          <p class="font-medium text-sm truncate">${esc(s.prenom)} ${esc(s.nom)}</p>
-                          <p class="text-[10px] text-gray-500">Section ${esc(s.section || '—')}</p>
+                          <p class="font-medium text-sm truncate">${esc(s.nom.toUpperCase())} ${esc(s.prenom)}</p>
                         </div>
                       </div>
                     </td>
-                    <td class="p-3"><span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded whitespace-nowrap">${esc(cls?.nom || '—')}</span></td>
+                    <td class="p-3"><span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">${esc(s.section || '—')}</span></td>
                     <td class="p-3"><span class="cred-user">${esc(s.username || '—')}</span></td>
                     <td class="p-3"><span class="cred-badge">${esc(s.password || '—')}</span></td>
                     <td class="p-3">
@@ -1828,8 +1859,10 @@ function renderStudents() {
             </tbody>
           </table>
         </div>
-      </div>
-    `;
+      `;
+    });
+
+    html += `</div>`;
   });
 
   container.innerHTML = html;
@@ -1932,7 +1965,7 @@ function goToEco(id) {
 }
 
 /* =================================================================
-   NOTES — 3 Nivo
+   NOTES
 ================================================================= */
 function renderNotes() {
   if (notesState.level === 'classes')       showNotesClasses();
